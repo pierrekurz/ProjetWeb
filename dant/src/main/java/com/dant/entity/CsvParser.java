@@ -7,9 +7,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class CsvParser {
-	public static void parseCsv() throws Exception {
-		
-		String csvFile = "C:\\Users\\Nguye\\OneDrive\\Documents\\dant-master\\test.csv";
+	public static void parseCsv(String path) throws Exception {
+		//"C:\\Users\\Nguye\\OneDrive\\Documents\\dant-master\\test.csv";
+		String csvFile = path;
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";

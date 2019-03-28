@@ -127,8 +127,8 @@ public class Endpoint {
 
 	@POST
 	@Path("/parsecsv")
-	public void parseCsv() throws Exception {
-		CsvParser.parseCsv();
+	public void parseCsv(@QueryParam("pathToFile") String path) throws Exception {
+		CsvParser.parseCsv(path);
 	}
 
 	@POST
