@@ -10,23 +10,16 @@ public class lecteurTable {
 		this.currentTable = nameTable
 		this.nameColumn = nameColumn
 		this.element = element
-		this.returnTable = new Table()
+		this.returnTable = new Table("table indexes" + nameColumn + " element recherche : " + element)
 
-		for (int j = 0; j < this.currentTable.size(); j++){
+		for (int j = 0; j < this.currentTable.cols.size(); j++){
 
-			if (this.element in this.currentTable[j][this.nameColumn]){
+			if (this.element in this.currentTable.elements[j].get(this.nameColumn)){
 
 				this.returnTable.add(this.currentTable[j])
-
-
-
-
 			}
 
-
 		}
-
-
 
 	}
  
