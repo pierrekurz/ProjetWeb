@@ -1,4 +1,4 @@
-package com.dant.entity;
+/* package com.dant.entity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,8 @@ public class Index {
 		return result;
 		
 	}
-	public List<Object[]> getWithoutIndex(String key){
+	public List<Object[]> getWithoutIndex(String key){ // exemple sans index
+		
 		List<Object[]> res = new ArrayList<Object[]>();
 		for(Object[] line : lines) {
 			if(line[0].equals(key)) {
@@ -47,3 +48,4 @@ public class Index {
 		return res;
 	}
 }
+*/

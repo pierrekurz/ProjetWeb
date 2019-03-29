@@ -1,4 +1,6 @@
 package com.dant.entity;
+import java.util.List;
+
 import com.google.gson.JsonObject;
 
 
@@ -29,20 +31,20 @@ public class lecteurTable {
 	}
 
 
-	public void getLinesByConditionsNumber(Table nameTable, String nameColumn, String condition, Int value){
+/*	public void getLinesByConditionsNumber(Table nameTable, String nameColumn, String condition, int value){
 		// function to get elements from a condition on its value 
 
 		returnTable = new Table("table indexes" + nameColumn + " element recherche : " + element);
 		Colonne currentColonne = nameTable.cols.get(nameColumn);
 
-		if currentColonne.type != "int"{
+		if (currentColonne.getType() != "int"){
 			// the column doesn t contains figure so it is impossible 
-			System.out.println('error : not int in selected column');
+			System.out.println("error : not int in selected column");
 		}
 
 		else{
 
-			for (k=0; k< nameTable.elementsTable; k++){
+			for (int k=0; k< nameTable.elementsTable; k++){
 				// for each element in the column, we are going to test if the condition is validated
 
 				if(condition == "=" && nameTable.elementsTable.get(k).get(nameColumn) == value){
@@ -78,7 +80,7 @@ public class lecteurTable {
 
 		}
 
-	}
+	}*/
 
 
 

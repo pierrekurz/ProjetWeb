@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 
 public class Table implements Serializable{
 	private String name;
-	private Map<String, Index> index = new HashMap<>();
+	//private Map<String, Index> index = new HashMap<>();
 	List<Colonne> cols=new ArrayList<Colonne>();
 	List<HashMap<Colonne, String>> elementsTable =new ArrayList<HashMap<Colonne, String>>();
 	
@@ -32,17 +32,19 @@ public class Table implements Serializable{
 	public void addColonne(String colName, String type) throws Exception {
 		Colonne c=new Colonne(colName, type);
 		if(cols.contains(c)) {
-			throw new Exception("La colonne est déjà existante");
+			throw new Exception("La colonne est deja existante");
 		}
 		else cols.add(c);
 	}
 	
 	public void insert(String[] donnees) {
 		HashMap<Colonne, String> element = new HashMap<>();
-		for (int i=0; i<donnees.length;i++) {
+		for (int i=0; i<donnees.length-1;i++) {
+			System.out.println("insert for loop");
 			element.put(cols.get(i), donnees[i]);
+			System.out.println("donnees : "+donnees.length);
 		}
-		
+		System.out.println("insert sortie de boucle");
 		elementsTable.add(element);
 		
 		
@@ -57,12 +59,12 @@ public class Table implements Serializable{
 	}
 
 
-	public Map<String, Index> getIndex() {
+	/*public Map<String, Index> getIndex() {
 		return index;
 	}
 
 
 	public void setIndex(Map<String, Index> index) {
 		this.index = index;
-	}
+	}*/
 }

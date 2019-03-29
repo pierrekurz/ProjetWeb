@@ -42,8 +42,8 @@ public class Endpoint {
 		Table t = new Table(name);
 		if (!tables.containsKey(name)) {
 			tables.put(name, t);
-			System.out.println("Table " + name + " crée");
-			System.out.println("ligne " + ligne + " crée");
+			System.out.println("Table " + name + " crï¿½e");
+			System.out.println("ligne " + ligne + " crï¿½e");
 
 		}
 		System.out.println(tables.toString());
@@ -63,7 +63,7 @@ public class Endpoint {
 			e.printStackTrace();
 		}
 		System.out.println(
-				"Colonne ajoutée name : " + c.getName() + " type : " + c.getType() + " dans la table : " + tablename);
+				"Colonne ajoutï¿½e name : " + c.getName() + " type : " + c.getType() + " dans la table : " + tablename);
 
 	}
 
@@ -107,7 +107,7 @@ public class Endpoint {
 	public void readTable(@QueryParam("nameTable") String nameTable, @QueryParam("nameColumn") String nameColumn,
 			@QueryParam("condition") String condition, @QueryParam("value") String value) {
 		Table t = tables.get(nameTable);
-		l.getLinesByConditionsNumber(t, nameColumn, condition, value);
+		//l.getLinesByConditionsNumber(t, nameColumn, condition, value);
 	}
 
 
@@ -116,7 +116,7 @@ public class Endpoint {
 	public void readTable(@QueryParam("nameTable") String nameTable, @QueryParam("nameColumn") List<String> nameColumns,
 			@QueryParam("element") String element) {
 		Table t = tables.get(nameTable);
-		l.getLinesByConditionsNumber(t, nameColumns, nameColumns);
+		//l.getLinesByConditionsNumber(t, nameColumns, nameColumns);
 	}
 
 	@GET
@@ -127,8 +127,8 @@ public class Endpoint {
 
 	@POST
 	@Path("/parsecsv")
-	public void parseCsv(@QueryParam("pathToFile") String path) throws Exception {
-		CsvParser.parseCsv(path);
+	public void parseCsv() throws Exception {
+		CsvParser.parseCsv("/Users/kurzed/Desktop/NTWeb/ProjetWeb/deniro.csv");
 	}
 
 	@POST
