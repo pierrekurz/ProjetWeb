@@ -20,7 +20,7 @@ import java.util.Map.Entry;
 /**
  * Created by pitton on 2017-02-20.
  */
-@Path("/query")
+@Path("/api/table")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GetRequest {

@@ -28,40 +28,9 @@ public class PutRequest {
 
 	static Map<String, Table> tables = new HashMap<String, Table>();
 
-	@PUT
-	@Path("/newtable")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void tableCreated(@QueryParam("name") String name, Ligne ligne) {
-		Table t = new Table(name);
-		if (!tables.containsKey(name)) {
-			tables.put(name, t);
-			System.out.println("Table " + name + " creee");
-			System.out.println("ligne " + ligne + " creee");
+	
 
-		}
-		System.out.println(tables.toString());
-	}
-
-	@PUT
-	@Path("/{tablename}/newcolonne")
-	@Produces(MediaType.TEXT_HTML)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void colonneCreated(@PathParam("tablename") String tablename, @QueryParam("colonnename") String colonnename,
-			@QueryParam("colonnetype") String colonnetype) {
-		Colonne c = new Colonne(colonnename, colonnetype);
-		Table t = tables.get(tablename);
-		try {
-			t.addColonne(colonnename, colonnetype);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println(
-				"Colonne ajoutee name : " + c.getName() + " type : " + c.getType() + " dans la table : " + tablename);
-
-	}
-
-
+	
 
 
 	/*

@@ -98,7 +98,7 @@ public class Endpoint {
 	public void readTable(@QueryParam("nameTable") String nameTable, @QueryParam("nameColumn") String nameColumn,
 			@QueryParam("element") String element) {
 		Table t = tables.get(nameTable);
-		l.lecteurTable(t, nameColumn, element);
+		l.liretable(t, nameColumn, element);
 	}
 
 

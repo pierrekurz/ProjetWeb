@@ -18,7 +18,7 @@ public class App extends Application {
 	public Set<Object> getSingletons() {
 		Set<Object> sets = new HashSet<>(1);
 		sets.add(new GetRequest());
-		sets.add(new PostRequest());
+		sets.add(new TableController());
 		sets.add(new PutRequest());
 		return sets;
 	}
