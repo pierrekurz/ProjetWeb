@@ -1,14 +1,23 @@
 package com.dant.entity;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -16,13 +25,18 @@ import java.net.UnknownHostException;
 public class Repartisseur {
 
 
-	List<Int> portsARepartir;
+	List<Integer> portsARepartir;
 	List<Socket> socketCommunication;
 	InetAddress ici;
 
-	void repartisseur(){
-		this.portsARepartir = new ArrayList<Int>();
-		 this.ici = InetAddress.getLocalHost();
+	public Repartisseur(){
+		this.portsARepartir = new ArrayList<Integer>();
+		 try {
+			this.ici = InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 
 	}
@@ -37,13 +51,18 @@ public class Repartisseur {
 		// creation du socket de communication entre la machine principale et le nouveau noeud
 		InetSocketAddress serverAddress = new InetSocketAddress(this.ici, newPort);
 		Socket socket = new Socket();
-		socket.connect(serverAddress);
+		try {
+			socket.connect(serverAddress);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.socketCommunication.add(socket);
 	}
 
 
 
-	public void repartirInstruction(String endpoint, String typeRequest){
+	public String repartirInstruction(String endpoint, String typeRequest){
 		 /*endpoint = endopoint appele sur les autres noeuds. 
 		
 		*/
@@ -100,13 +119,14 @@ public class Repartisseur {
 }
 
 
-	public void recupererReponses(){
+	public void recupererReponses() throws IOException{
 
 		// methode de repartition d'une instruction aux autres noeuds
 
-		for (InetSocketAddress socket : socketCommunication){
+		for (Socket socket : socketCommunication){
 			InputStream is = socket.getInputStream();
-			x = is.read;
+			int x = is.read();
+			
 
 		}
 	}
