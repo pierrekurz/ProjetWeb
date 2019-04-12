@@ -17,7 +17,9 @@ public class App extends Application {
 	@Override
 	public Set<Object> getSingletons() {
 		Set<Object> sets = new HashSet<>(1);
-		sets.add(new Endpoint());
+		sets.add(new GetRequest());
+		sets.add(new PostRequest());
+		sets.add(new PutRequest());
 		return sets;
 	}
 
