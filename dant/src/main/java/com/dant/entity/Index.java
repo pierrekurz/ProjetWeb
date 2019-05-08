@@ -1,4 +1,4 @@
-/* package com.dant.entity;
+package com.dant.entity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,7 @@ public class Index {
 		if(rows==null) {
 			return null;
 		}
-		List<Object> result = new ArrayList<Object>();
+		List<Object[]> result = new ArrayList<>();
 		for(Integer row : rows) {
 			result.add(lines.get(row));
 			
@@ -48,4 +48,3 @@ public class Index {
 		return res;
 	}
 }
-*/
