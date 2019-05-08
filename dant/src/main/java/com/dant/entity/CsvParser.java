@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class CsvParser {
-	public static void parseCsv(String path) throws Exception {
+	public static Table parseCsv(String path) throws Exception {
 		// "C:\\Users\\Nguye\\OneDrive\\Documents\\dant-master\\test.csv";
 		String csvFile = path;
 		BufferedReader br = null;
@@ -15,7 +15,7 @@ public class CsvParser {
 		String cvsSplitBy = ",";
 		int compteurColonne = 1;
 		int cpt = 0;
-		Table table = new Table("table generale");
+		Table table = new Table("tableGenerale");
 		try {
 			System.out.println("ok parser");
 			br = new BufferedReader(new FileReader(csvFile));
@@ -73,7 +73,7 @@ public class CsvParser {
 				}
 			}
 		}
-
+		return table;
 	}
 
 }

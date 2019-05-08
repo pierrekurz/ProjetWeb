@@ -14,13 +14,11 @@ public class lecteurTable {
 	
 
 	
-	public void lecteurTable(Table nameTable, String nameColumn, String element) {
-
+	public void liretable(Table nameTable, String nameColumn, String element) {
 		this.nameColumn = nameColumn;
 		this.element = element;
 		returnTable = new Table("table indexes" + nameColumn + " element recherche : " + element);
-
-		for (int j = 0; j < this.currentTable.cols.size(); j++){
+		for (int j = 0; j < nameTable.cols.size(); j++){
 			if (nameTable.elementsTable.get(j).get(nameColumn).contains(element )){
 				returnTable.insert(nameTable.elementsTable.get(j));
 				System.out.println(nameTable.elementsTable.get(j));
