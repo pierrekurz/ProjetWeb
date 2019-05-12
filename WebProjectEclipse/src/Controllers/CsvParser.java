@@ -26,7 +26,7 @@ public class CsvParser {
         String cvsSplitBy = ",";
         int compteurColonne = 1;
         int cpt = 0;
-        Table table = new Table("table generale");
+        Table table = new Table("table generale", true);
         try {
             System.out.println("ok parser");
             br = new BufferedReader(new FileReader(csvFile));
@@ -34,13 +34,13 @@ public class CsvParser {
             String nameColonne = "";
             List<String> headersTable = new ArrayList<>();
             for (int i = 0; i < line.length(); i++) {
-                if (line.charAt(i) == ',' && line.charAt(i+1) == ' ') {
+                if (line.charAt(i) == ',' ) {
                     compteurColonne++;
                     headersTable.add(nameColonne); 
-                    System.out.println("colonne test");
-                    System.out.println(nameColonne);
+                    //System.out.println("colonne test");
+                    //System.out.println(nameColonne);
                     nameColonne = "";
-                    i++;
+                    //i++;
                 } else {
                     nameColonne += line.charAt(i);
                 }
@@ -57,7 +57,18 @@ public class CsvParser {
             
             
             List<Object[]> listLinesAvailable = new ArrayList<>();
+            int countLine = 0;
             while ((line = br.readLine()) != null) {
+            	if (countLine<3800000) {
+	            	if (countLine/100000f == (int)countLine/100000) {
+	            		System.out.println(countLine);
+	            	}
+            	}
+            	else {
+            		System.out.println(countLine);
+            		
+            	}
+            	countLine++;
             	nameColonne = "";
                 int countWord = 0;
                 boolean firstLetter = true;
@@ -65,13 +76,13 @@ public class CsvParser {
 
                 String elementCSV[] = new String[compteurColonne];
                 for (int i = 0; i < line.length(); i++) {
-                    if (line.charAt(i) == ',' && line.charAt(i+1) == ' ') {
+                    if (line.charAt(i) == ',') {
                         elementCSV[countWord] = nameColonne;
-                        System.out.println(nameColonne);
+                        //System.out.println(nameColonne);
                         nameColonne = "";
                         firstLetter = true;
                         countWord++;
-                        i++;
+                        //i++;
                     } else {
                     	if(firstLetter) {
                     		if (line.charAt(i) == ' ') { 
@@ -87,6 +98,7 @@ public class CsvParser {
                         
                     }
                 }
+                
                 elementCSV[countWord] = nameColonne;
                 /*System.out.println(cpt);
                 System.out.println("voici 3 mots");
@@ -106,6 +118,7 @@ public class CsvParser {
                 cpt++;
                 //System.out.println(nameColonne);
             }
+            System.out.println("done!");
             table.addLines(listLinesAvailable);
 
             
