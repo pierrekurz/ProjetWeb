@@ -9,10 +9,10 @@ public class Main {
 	        //csvReader.parseCsv("/Users/David/Documents/GitHub/ProjetWeb/deniro.csv");
 		 	//CsvParser csvReader = new CsvParser("/Users/David/Desktop/L3 DANT/S2/Web_O_Pitton/green_tripdata_2018-01.csv");
 		 	//CsvParser csvReader1 = new CsvParser("/Users/David/Desktop/L3 DANT/S2/Web_O_Pitton/green_tripdata_2018-01.csv");
-		 	CsvParser csvReader2 = new CsvParser("/Users/David/Desktop/L3 DANT/S2/Web_O_Pitton/green_tripdata_2018-01.csv");
-		 	CsvParser csvReader3 = new CsvParser("/Users/David/Desktop/L3 DANT/S2/Web_O_Pitton/green_tripdata_2018-01.csv");
-		 	CsvParser csvReader4 = new CsvParser("/Users/David/Desktop/L3 DANT/S2/Web_O_Pitton/green_tripdata_2018-01.csv");
-		 	CsvParser csvReader5 = new CsvParser("/Users/David/Desktop/L3 DANT/S2/Web_O_Pitton/green_tripdata_2018-01.csv");
+		 	CsvParser csvReader2 = new CsvParser("../yellow_tripdata_2009-01.csv");
+		 	CsvParser csvReader3 = new CsvParser("../yellow_tripdata_2009-01.csv");
+		 	CsvParser csvReader4 = new CsvParser("../yellow_tripdata_2009-01.csv");
+		 	CsvParser csvReader5 = new CsvParser("../yellow_tripdata_2009-01.csv");
 	        //Table table = csvReader.getTable();
 	        
 	        System.out.println("kkl");

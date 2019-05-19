@@ -33,13 +33,13 @@ public class Table implements Serializable {
         this.mainNode = mainNode;
         this.repartisseur = new Repartisseur(mainNode);
         this.nodeTurn = 0;
-    	System.out.println("Table crÃ©Ã©e : ");
+    	System.out.println("Table créée : ");
     	System.out.println(this.name);
     	System.out.println("\n");
     }
 
     public void init(List<String> line0) {
-    	//System.out.println("Table initialisÃ©e : ");
+    	//System.out.println("Table initialisée : ");
         for (String row : line0) {
             this.columnNames.add(row);
             //System.out.println("Titres : ");
@@ -63,7 +63,7 @@ public class Table implements Serializable {
     		}
     	}
     	
-    	System.out.println("Lignes ajoutÃ©es : ");
+    	System.out.println("Lignes ajoutées : ");
     	int llklk = 0;
         for (Object[] line : lines) {
         	/*System.out.println(line[0]);
