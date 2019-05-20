@@ -22,7 +22,7 @@ public class Table implements Serializable {
     Boolean mainNode;
     //private Map<String, Index> index = new HashMap<>();
     List<String> columnNames = new ArrayList<String>();
-    HashMap<String, Index> listIndex = new HashMap<String, Index>();
+    HashMap<List<String>, Index> listIndex = new HashMap<List<String>, Index>();
     List<Object[]> data = new ArrayList<>();
     Repartisseur repartisseur;
     int nodeTurn;
@@ -33,13 +33,13 @@ public class Table implements Serializable {
         this.mainNode = mainNode;
         this.repartisseur = new Repartisseur(mainNode);
         this.nodeTurn = 0;
-    	System.out.println("Table créée : ");
+    	System.out.println("Table crÃ©Ã©e : ");
     	System.out.println(this.name);
     	System.out.println("\n");
     }
 
     public void init(List<String> line0) {
-    	//System.out.println("Table initialisée : ");
+    	//System.out.println("Table initialisÃ©e : ");
         for (String row : line0) {
             this.columnNames.add(row);
             //System.out.println("Titres : ");
@@ -63,7 +63,7 @@ public class Table implements Serializable {
     		}
     	}
     	
-    	System.out.println("Lignes ajoutées : ");
+    	System.out.println("Lignes ajoutÃ©es : ");
     	int llklk = 0;
         for (Object[] line : lines) {
         	/*System.out.println(line[0]);
@@ -76,37 +76,37 @@ public class Table implements Serializable {
         //System.out.println("nb elements");
         //System.out.println(data.size());
 
-        for (String nameCurrentIndex : listIndex.keySet()) {
+        for (List<String> nameCurrentIndex : listIndex.keySet()) {
             for (Object[] line : lines) {
             	listIndex.get(nameCurrentIndex).insert(line);
             }
         }
     }
 
-    public void addIndex(String nameIndex) throws MalformedURLException {
+    public void addIndex(List<String> nameIndex) throws MalformedURLException {
     	if (this.mainNode == true) {
     		// need to distribute the instruction
     		repartisseur.addIndex(nameIndex);
     	}
     	//System.out.println("Ajout Index");
         int nbLine = 0;
-        int placeOfValue = 0;
+        List<Integer> placeOfValue = new ArrayList<Integer>();
         for (String name : columnNames) {
-            if (name.equals(nameIndex)) {
-                placeOfValue = nbLine;
-            } 
+        	for (String possibleName : nameIndex)
+	            if (name.equals(possibleName)) {
+	                placeOfValue.add(nbLine);
+	            } 
             nbLine++;
         }
         //System.out.println("nb elements");
         //System.out.println(data.size());
+        System.out.println(placeOfValue);
+        
         Index newIndex = new Index(placeOfValue);
         listIndex.put(nameIndex, newIndex);
-        int rr = 0;
         for (Object[] line : data) {
         	//System.out.println("Valeur indexee: "); 
-        	//System.out.println(line[placeOfValue]);
-        	//System.out.println(rr);
-        	rr++;
+        	//System.out.println(line[placeOfValue.get(0)]);
         	newIndex.insert(line);	
         }
         System.out.println("\n");
@@ -139,15 +139,17 @@ public class Table implements Serializable {
     	return results;
     }
     
-    public void get(String nameIndex, String value) {
-    	Index index = listIndex.get(nameIndex);
-    	List<Object[]> results = index.get(value);
+    public void get(List<String> nameOfIndex1, List<String> nameOfMovie) {
+    	Index index = listIndex.get(nameOfIndex1);
+    	//System.out.println(index.lines.get(0));
+    	List<Object[]> results = index.get(nameOfMovie);
+ 
     	for (Object[] line : results) {
     		//System.out.println(line);	
     	}
-    	if (this.mainNode) {
+    	/*if (this.mainNode) {
     		// need to distribute the instruction
     		results.addAll(repartisseur.get(nameIndex, value));
-    	}
+    	}*/
     }
 }

@@ -10,25 +10,33 @@ import java.util.List;
 import java.util.Map;
 
 public class Index{
-    int nbElementToIndex;
+	List<Integer> nbElementToIndex;
 
-    public Index(int nbElement) {
+    public Index(List<Integer> nbElement) {
          this.nbElementToIndex = nbElement;
     }
 
     List<Object[]> lines = new ArrayList<Object[]>();
-    Map<String,List<Integer>> index = new HashMap<String, List<Integer>>();
+    Map<List<Object>,List<Integer>> index = new HashMap<List<Object>, List<Integer>>();
 
     public void insert(Object[] line) {
         int nbLines = lines.size();
         lines.add(line);
-        List<Integer> rows=index.get(line[this.nbElementToIndex]);
+        List<Object> valueInRow = new ArrayList<Object>();
+        int ind = 0;
+        boolean oneNull = true;
+        //List<Integer> rows = new ArrayList<Integer>();
+        for(Integer nbIndex : this.nbElementToIndex){
+        	Object valueToAdd = line[this.nbElementToIndex.get(ind)];
+        	valueInRow.add(valueToAdd);
+        	ind++;        	
+        }
+        List<Integer> rows = index.get(valueInRow);
         if(rows==null) {
             rows=new ArrayList<Integer>();
             //System.out.println(line[this.nbElementToIndex]);
             if (line!= null) {
-            	String valueToAdd = line[this.nbElementToIndex].toString();
-            	index.put(valueToAdd, rows);
+            	index.put(valueInRow, rows);
             }
         }
         //System.out.println(line[this.nbElementToIndex]);
@@ -36,15 +44,18 @@ public class Index{
     }
        
     
-    public List<Object[]> get(String key) {
-        List<Integer> rows = index.get(key);
+    public List<Object[]> get(List<String> nameOfMovie) {
+        List<Integer> rows = index.get(nameOfMovie);
+        System.out.println(nameOfMovie);
+        System.out.println(index);
         if(rows==null) {
             return null;
         }
         List<Object[]> result = new ArrayList<>();
         for(Integer row : rows) {
             result.add(lines.get(row));
-            System.out.println(lines.get(row)[2]);
+            //System.out.println(lines.get(row)[2]);
+            System.out.println(row);
             
 
         }
@@ -55,8 +66,8 @@ public class Index{
     
     public List<Object[]> searchBigger(int valueMin) {
     	List<Object[]> result = new ArrayList<Object[]>() ;
-    	for (String key : index.keySet()) {
-    		if(Integer.parseInt(key) >= valueMin) {
+    	for (List<Object> key : index.keySet()) {
+    		if(Integer.parseInt((String) key.get(0)) >= valueMin) {
     			for (Integer nbLine : index.get(key)) {
     				result.add(lines.get(nbLine));
     				System.out.println(lines.get(nbLine)[2]);
@@ -71,8 +82,8 @@ public class Index{
     
     public List<Object[]> searchSmaller(int valueMax) {
     	List<Object[]> result = new ArrayList<Object[]>() ;
-    	for (String key : index.keySet()) {
-    		if(Integer.parseInt(key) <= valueMax) {
+    	for (List<Object> key : index.keySet()) {
+    		if(Integer.parseInt((String) key.get(0)) <= valueMax) {
     			for (Integer nbLine : index.get(key)) {
     				result.add(lines.get(nbLine));
     				System.out.println(lines.get(nbLine)[2]);

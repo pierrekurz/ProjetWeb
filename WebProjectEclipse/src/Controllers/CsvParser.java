@@ -27,6 +27,7 @@ public class CsvParser {
         int compteurColonne = 1;
         int cpt = 0;
         Table table = new Table("table generale", true);
+        boolean firstLetterHeader = true;
         try {
             System.out.println("ok parser");
             br = new BufferedReader(new FileReader(csvFile));
@@ -38,15 +39,28 @@ public class CsvParser {
                     compteurColonne++;
                     headersTable.add(nameColonne); 
                     //System.out.println("colonne test");
-                    //System.out.println(nameColonne);
+                    System.out.println(nameColonne);
                     nameColonne = "";
+                    firstLetterHeader = true;
                     //i++;
                 } else {
-                    nameColonne += line.charAt(i);
+                	if(firstLetterHeader) {
+                		if (line.charAt(i) == ' ') { 
+                		}
+                		else {
+                			firstLetterHeader = false;
+                    		nameColonne += line.charAt(i);
+                		}
+                	}
+                	else {
+                		nameColonne += line.charAt(i);
+                		//System.out.println(nameColonne);
+                	}
                 }
             }
             //compteurColonne++;
             headersTable.add(nameColonne);
+            System.out.println(nameColonne);
             table.init(headersTable);
             /*System.out.println("kkk 1");
             System.out.println(nameColonne);
@@ -66,6 +80,7 @@ public class CsvParser {
             	}
             	else {
             		System.out.println(countLine);
+            		
             		
             	}
             	countLine++;

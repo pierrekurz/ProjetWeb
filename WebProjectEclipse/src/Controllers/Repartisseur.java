@@ -38,7 +38,7 @@ public class Repartisseur {
 
 	
 	// Main functions to be shared 
-	public void addIndex(String nameIndex) throws MalformedURLException {
+	public void addIndex(List<String> nameIndex) throws MalformedURLException {
 		//Attention, verifier le nom de l'endPoint
 		String instruction = "addIndex/";
 		instruction += nameIndex;
