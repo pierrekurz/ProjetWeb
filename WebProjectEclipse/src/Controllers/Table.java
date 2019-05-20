@@ -141,8 +141,53 @@ public class Table implements Serializable {
     
     public void get(List<String> nameOfIndex1, List<String> nameOfMovie) {
     	Index index = listIndex.get(nameOfIndex1);
-    	//System.out.println(index.lines.get(0));
-    	List<Object[]> results = index.get(nameOfMovie);
+    	//System.out.println(index);
+    	List<Object[]> results;
+    	if (index == null) {
+    		
+    		results = new ArrayList<Object[]>();
+    		List<Integer> placeOfValue = new ArrayList<Integer>();
+    		int nbLine = 0;
+            for (String name : columnNames) {
+            	for (String possibleName : nameOfIndex1)
+    	            if (name.equals(possibleName)) {
+    	                placeOfValue.add(nbLine);
+    	                
+    	            } 
+                nbLine++;
+            }
+            int nbOfLineInData = 0;
+    		for (Object[] line : data) {
+    			int nbWordsOk = 0;
+    			for (int rgLine : placeOfValue) {
+    				//System.out.println(line[rgLine]);
+    				for (String nameHeader : nameOfMovie) {
+    					//System.out.println(nameHeader);
+    					
+    					
+    					if (line[rgLine].equals(nameHeader)) {
+    						nbWordsOk ++;
+    						//System.out.println(nbWordsOk);
+        					//System.out.println(line[rgLine]);
+    						
+    						
+    					}
+    				}
+    			}
+    			if (nbWordsOk>=nameOfMovie.size()){
+    				results.add(line);
+    				System.out.println(nbOfLineInData);
+    				
+    			}
+    			nbOfLineInData ++;
+    		}
+    		
+    		
+    		
+    	}
+    	else {
+    	results = index.get(nameOfMovie);
+    	}
  
     	for (Object[] line : results) {
     		//System.out.println(line);	

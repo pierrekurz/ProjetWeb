@@ -26,7 +26,11 @@ public class Main {
 	        nameOfIndex1.add("Score");
 	        nameOfIndex1.add("Title");
 	        
-	        table.addIndex(nameOfIndex1);
+	        List<String> nameOfIndex2 = new ArrayList<String>();
+	        nameOfIndex1.add("jk");
+	        nameOfIndex1.add("Title");
+	        
+	        //table.addIndex(nameOfIndex1);
 	        List<String> nameOfMovie = new ArrayList<String>();
 	        nameOfMovie.add("50");
 	        nameOfMovie.add("\"Stone\"");
@@ -35,6 +39,7 @@ public class Main {
 	        //System.out.println(nameOfIndex1);
 	        //table.searchBigger("Score", 99);
 	        //table.searchSmaller("Score", 10);
+	        //table.get(nameOfIndex1, nameOfMovie);
 	        table.get(nameOfIndex1, nameOfMovie);
 	        
 
