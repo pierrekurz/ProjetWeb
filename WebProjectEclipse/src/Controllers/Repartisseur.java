@@ -10,12 +10,18 @@ import java.util.List;
 public class Repartisseur {
 	Boolean mainNode;
 	List<Integer> otherNodes; 
+	List<Table> listTables = new ArrayList<>();
+	CsvParser CsvParser;
 	
 	public Repartisseur(Boolean mainNode){
 		this.mainNode = mainNode;
 		this.otherNodes = new ArrayList();
 	}
 	
+	
+	/*public void addIndex(List<String> nameIndex) throws MalformedURLException {
+		listTables.get(0).addIndex(nameIndex);
+	}*/
 	
 	
 	// calling other nodes' API
@@ -40,29 +46,42 @@ public class Repartisseur {
 	// Main functions to be shared 
 	public void addIndex(List<String> nameIndex) throws MalformedURLException {
 		//Attention, verifier le nom de l'endPoint
-		String instruction = "addIndex/";
-		instruction += nameIndex;
-		List<Object[]> otherNodesAnswers = sendInstructions(instruction);
+		if (this.mainNode) {
+			String instruction = "addIndex/";
+			instruction += nameIndex;
+			List<Object[]> otherNodesAnswers = sendInstructions(instruction);
+			
+		}
+		listTables.get(0).addIndex(nameIndex);
+		
 	}
 
 
 
 	public List<Object[]> searchBigger(String nameIndex, int valueMin ) throws MalformedURLException {
-		String instruction = "searchBigger/";
-		instruction += nameIndex;
-		instruction += ((Integer)valueMin).toString();
-		List<Object[]> otherNodesAnswers = sendInstructions(instruction);
+		List<Object[]> otherNodesAnswers = new ArrayList<Object[]>();
+		if (this.mainNode) {
+			String instruction = "searchBigger/";
+			instruction += nameIndex;
+			instruction += ((Integer)valueMin).toString();
+			otherNodesAnswers.addAll(sendInstructions(instruction));
+		}
+		otherNodesAnswers.addAll(this.listTables.get(0).searchBigger(nameIndex, valueMin));
 		return otherNodesAnswers;
 	}
 
 
 
 	public List<Object[]> searchSmaller(String nameIndex, int valueMax) throws MalformedURLException {
-		String instruction = "searchSmaller/";
-		instruction += nameIndex;
-		instruction += ((Integer)valueMax).toString();
-		List<Object[]> otherNodesAnswers = sendInstructions(instruction);
-		return null;
+		List<Object[]> otherNodesAnswers = new ArrayList<Object[]>();
+		if (this.mainNode) {
+			String instruction = "searchSmaller/";
+			instruction += nameIndex;
+			instruction += ((Integer)valueMax).toString();
+			otherNodesAnswers.addAll(sendInstructions(instruction));
+		}
+		otherNodesAnswers.addAll(this.listTables.get(0).searchSmaller(nameIndex, valueMax));
+		return otherNodesAnswers;
 	}
 	
 	
@@ -81,6 +100,18 @@ public class Repartisseur {
 		instruction += lines;
 		
 		
+		
+	}
+
+
+
+	public void ParceCSV(String path) throws Exception {
+		if (this.mainNode) {
+			String instruction = "parse/" + path; 
+			sendInstructions(instruction);
+		}
+		CsvParser = new CsvParser(path);
+		listTables.add(CsvParser.getTable());
 		
 	}
 

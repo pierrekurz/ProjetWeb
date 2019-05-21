@@ -20,6 +20,8 @@ import java.util.Map.Entry;
 /**
  * Created by pitton on 2017-02-20.
  */
+mainController mainController = mainController();
+
 @Path("/api")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -49,6 +51,24 @@ public class Endpoint {
 		System.out.println(tables.toString());
 	}
 
+	@PUT
+	@Path("/{tablename}/newColonne")
+	@Produces(MediaType.TEXT_HTML)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void colonneCreated(@PathParam("tablename") String tablename, @QueryParam("colonnename") String colonnename,
+			@QueryParam("colonnetype") String colonnetype) {
+		Colonne c = new Colonne(colonnename, colonnetype);
+		Table t = tables.get(tablename);
+		try {
+			t.addColonne(colonnename, colonnetype);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(
+				"Colonne ajout�e name : " + c.getName() + " type : " + c.getType() + " dans la table : " + tablename);
+
+	}
+	
 	@PUT
 	@Path("/{tablename}/newColonne")
 	@Produces(MediaType.TEXT_HTML)
