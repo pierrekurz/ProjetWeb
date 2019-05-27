@@ -9,16 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CsvParser {
+	String name;
 	Table table;
-	public CsvParser(String path) throws Exception {
-		this.table = parseCsv(path);
+	public CsvParser(String name, String path) throws Exception {
+		this.name = name;
+		this.table = parseCsv(path, this.name);
 	}
 	
 	public Table getTable(){
 		return this.table;
 	}
 	
-    public static Table parseCsv(String path) throws Exception {
+    public static Table parseCsv(String path, String nameOfTable) throws Exception {
         // "C:\\Users\\Nguye\\OneDrive\\Documents\\dant-master\\test.csv";
         String csvFile = path;
         BufferedReader br = null;
@@ -26,7 +28,7 @@ public class CsvParser {
         String cvsSplitBy = ",";
         int compteurColonne = 1;
         int cpt = 0;
-        Table table = new Table("table generale", true);
+        Table table = new Table(nameOfTable, true);
         boolean firstLetterHeader = true;
         try {
             System.out.println("ok parser");
@@ -73,15 +75,17 @@ public class CsvParser {
             List<Object[]> listLinesAvailable = new ArrayList<>();
             int countLine = 0;
             while ((line = br.readLine()) != null) {
-            	if (countLine<3800000) {
-	            	if (countLine/100000f == (int)countLine/100000) {
-	            		System.out.println(countLine);
-	            	}
+            	
+            	if (listLinesAvailable.size() >= 1000000) {
+            		table.addLines(listLinesAvailable);
+                	listLinesAvailable = new ArrayList<>();
             	}
-            	else {
+            	
+            	
+            	
+            	
+            	if (countLine%10000 ==  0){
             		System.out.println(countLine);
-            		
-            		
             	}
             	countLine++;
             	nameColonne = "";
@@ -125,6 +129,8 @@ public class CsvParser {
                 if (elementCSV[compteurColonne-1] != null){
                 	//System.out.println("Ajout ligne");
                 	listLinesAvailable.add(elementCSV);
+                	
+                	
                 }
                 else {
                 	/*System.out.println(nameColonne);
@@ -133,8 +139,10 @@ public class CsvParser {
                 cpt++;
                 //System.out.println(nameColonne);
             }
-            System.out.println("done!");
             table.addLines(listLinesAvailable);
+            
+            System.out.println("done!");
+            
 
             
 

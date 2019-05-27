@@ -1,9 +1,6 @@
 package Controllers;
 
-
-
-
-
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -26,6 +23,7 @@ public class Table implements Serializable {
     List<Object[]> data = new ArrayList<>();
     Repartisseur repartisseur;
     int nodeTurn;
+    FileManager fileManager;
 
 
     public Table(String name, Boolean mainNode) {
@@ -33,13 +31,15 @@ public class Table implements Serializable {
         this.mainNode = mainNode;
         this.repartisseur = new Repartisseur(mainNode);
         this.nodeTurn = 0;
+        this.fileManager = new FileManager();
     	System.out.println("Table créée : ");
     	System.out.println(this.name);
     	System.out.println("\n");
     }
 
-    public void init(List<String> line0) {
+    public void init(List<String> line0) throws IOException {
     	//System.out.println("Table initialisée : ");
+    	this.fileManager.createFile(this.name, line0);
         for (String row : line0) {
             this.columnNames.add(row);
             //System.out.println("Titres : ");
@@ -48,14 +48,14 @@ public class Table implements Serializable {
         }
     }
 
-    public void addLines(List<Object[]> lines) {
+    public void addLines(List<Object[]> lines) throws IOException {
     	if (mainNode) {
     		// this is the main node
-    		if (this.nodeTurn != 0) {
+    		/*if (this.nodeTurn != 0) {
     			//it's not this node's turn to record the line
     			repartisseur.addLine(lines,nodeTurn );
     			return;
-    		}
+    		}*/
     		this.nodeTurn += 1;
     		// next node's turn
     		if (this.nodeTurn == this.repartisseur.otherNodes.size()) {
@@ -63,7 +63,7 @@ public class Table implements Serializable {
     		}
     	}
     	
-    	System.out.println("Lignes ajoutées : ");
+    	//System.out.println("Lignes ajoutées : ");
     	int llklk = 0;
         for (Object[] line : lines) {
         	/*System.out.println(line[0]);
@@ -71,10 +71,12 @@ public class Table implements Serializable {
         	System.out.println(line[2]);*/
         	//System.out.println(llklk );
         	llklk ++;
-            data.add(line);
+           
+            
         }
         //System.out.println("nb elements");
         //System.out.println(data.size());
+        this.fileManager.writeLines(this.name, lines);
 
         for (List<String> nameCurrentIndex : listIndex.keySet()) {
             for (Object[] line : lines) {
@@ -100,7 +102,7 @@ public class Table implements Serializable {
         }
         //System.out.println("nb elements");
         //System.out.println(data.size());
-        System.out.println(placeOfValue);
+        //System.out.println(placeOfValue);
         
         Index newIndex = new Index(placeOfValue);
         listIndex.put(nameIndex, newIndex);

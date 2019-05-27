@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Scanner;
 
 public class FileManager {
 
@@ -27,19 +28,28 @@ public class FileManager {
 	
 	
 	
-	public static void writeLines(String nameFile, List<HashMap<String, String>> linesToWrite) throws IOException {
+	public static void writeLines(String nameFile, List<Object[]> linesToWrite) throws IOException {
 		File file = fileAvailable.get(nameFile);
 		FileWriter ffw;
-
-		ffw=new FileWriter(file);
+		ffw=new FileWriter(file, true);
+		//BufferedWriter out = new BufferedWriter(ffw); 
+         //out.write(str); 
+         //out.close(); 
 		
 			
-		for (HashMap<String, String> currentLine : linesToWrite) {
-			for (Entry<String, String> currentWord :currentLine.entrySet()) {
-				ffw.write(currentWord.getValue());
-				ffw.write(",");	
+		for (Object[] currentLine : linesToWrite) {
+			int length = currentLine.length;
+			for (int nbWord = 0; nbWord<length; nbWord++) {
+				 String currentWord = currentLine[nbWord].toString();
+				 int lenWord = currentWord.length();
+				 //System.out.println(currentWord);
+				 for (int nbLetter = 0; nbLetter<lenWord; nbLetter++) {
+					 //System.out.println(currentWord.charAt(nbLetter));
+					ffw.write(currentWord.charAt(nbLetter));
+				 }
+				 ffw.write(",");
 			}
-			ffw.write("/");	
+			ffw.write("//");
 			
 		
 		}
@@ -65,34 +75,41 @@ public class FileManager {
 		Collections.sort(numbersToGet);// on trie la liste des lignes a recupere pour ne pas avoir a retourner en arriere
 		int nextNumberToGet = 0;// Prochain numero dans la liste des lignes à recuperer qu on va chercher dans le fichier
         try {
-            br = new BufferedReader(new FileReader(currentFile));
-            String currentLetter = br.readLine();
+        	//FileReader f = new FileReader(currentFile);
+        	Scanner sc = new Scanner(currentFile); 
+        	  
+            // we just need to use \\Z as delimiter 
+            sc.useDelimiter("//"); 
+          
+            String readLine = sc.next();
+          
             
             while (nextNumberToGet<numbersToGet.size()) {
-            
+            	
 	            while (readingLineNb<numbersToGet.get(nextNumberToGet)) {
-	            
-	            	int passedLetters = 0;
-	            	String previousLetter;
-	            	while(!(((previousLetter=currentLetter)=="/") && (currentLetter = br.readLine()) == "/")) {
-	            		//On a deux fois / , c est a dire que c est la fin de la ligne
-	            		passedLetters++;
-	            	}
-	            	
+	            	//System.out.println("ll");
+	            	readingLineNb++;
+	            	readLine = sc.next();
 	            }
 	            nextNumberToGet++;//On a trouve la premiere ligne
 	            
+	            //System.out.println(readLine);
 	            
 	            List<String> headersToGet = headersInFile.get(nameFile);// liste des headers du fichier
 	            HashMap<String, String> currentLine =  new HashMap<String, String>();// ligne a retourner
 	            
+	            int letterInTheWord = 0;
 	            for (String header : headersToGet) {
 	            	String currentWord = "";
-		            while(!((currentLetter = br.readLine()) == ",")) {
+	            	char currentLetter;
+		            while(!((currentLetter = readLine.charAt(letterInTheWord)) == ',') && (letterInTheWord <= readLine.length())){
+		            	//System.out.println(currentLetter);
+		            	letterInTheWord++;
 		        		//On est pas a la fin du mot
 		            	currentWord+=currentLetter;
 		        	}
-		            currentLine.put(header, currentWord);
+		            currentLine.put(header, currentWord); 
+		            letterInTheWord++;
 		            
 	            }
 	            
