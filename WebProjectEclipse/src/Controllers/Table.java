@@ -20,10 +20,12 @@ public class Table implements Serializable {
     //private Map<String, Index> index = new HashMap<>();
     List<String> columnNames = new ArrayList<String>();
     HashMap<List<String>, Index> listIndex = new HashMap<List<String>, Index>();
-    List<Object[]> data = new ArrayList<>();
+    //List<Object[]> data = new ArrayList<>();
     Repartisseur repartisseur;
     int nodeTurn;
     FileManager fileManager;
+    int nbLinesParsed;
+    List<String> headers;
 
 
     public Table(String name, Boolean mainNode) {
@@ -32,6 +34,8 @@ public class Table implements Serializable {
         this.repartisseur = new Repartisseur(mainNode);
         this.nodeTurn = 0;
         this.fileManager = new FileManager();
+        this.nbLinesParsed=0;
+        this.headers = new ArrayList<String>();
     	System.out.println("Table créée : ");
     	System.out.println(this.name);
     	System.out.println("\n");
@@ -39,6 +43,7 @@ public class Table implements Serializable {
 
     public void init(List<String> line0) throws IOException {
     	//System.out.println("Table initialisée : ");
+    	this.headers = line0;
     	this.fileManager.createFile(this.name, line0);
         for (String row : line0) {
             this.columnNames.add(row);
@@ -63,26 +68,31 @@ public class Table implements Serializable {
     		}
     	}
     	
-    	//System.out.println("Lignes ajoutées : ");
-    	int llklk = 0;
-        for (Object[] line : lines) {
-        	/*System.out.println(line[0]);
-        	System.out.println(line[1]);
-        	System.out.println(line[2]);*/
-        	//System.out.println(llklk );
-        	llklk ++;
-           
-            
-        }
+    	
+    	
         //System.out.println("nb elements");
         //System.out.println(data.size());
         this.fileManager.writeLines(this.name, lines);
+        
+        List<HashMap<String, String>> listformatedLine = new ArrayList<HashMap<String, String>>();
+        for(Object[] line:lines) {
+	        HashMap<String, String> formatedLine = new HashMap<String, String>();
+	        int nbOfWordAddedToHashMap = 0;
+	        for (String header : this.headers) {
+	        	formatedLine.put(header, line[nbOfWordAddedToHashMap].toString());
+	        	nbOfWordAddedToHashMap++;
+	        }
+	        listformatedLine.add(formatedLine);
+        }
 
         for (List<String> nameCurrentIndex : listIndex.keySet()) {
-            for (Object[] line : lines) {
-            	listIndex.get(nameCurrentIndex).insert(line);
+        	int l=0;
+            for (HashMap<String, String> formatedLine : listformatedLine) {
+            	listIndex.get(nameCurrentIndex).insert(formatedLine, this.nbLinesParsed+l);
+            	l++;
             }
         }
+        this.nbLinesParsed += lines.size();
     }
 
     public void addIndex(List<String> nameIndex) throws MalformedURLException {
@@ -104,27 +114,34 @@ public class Table implements Serializable {
         //System.out.println(data.size());
         //System.out.println(placeOfValue);
         
-        Index newIndex = new Index(placeOfValue);
+        Index newIndex = new Index(placeOfValue, nameIndex, this.name);
         listIndex.put(nameIndex, newIndex);
-        for (Object[] line : data) {
+
+    	List<HashMap<String, String>> linesToIndex;
+    	List<Integer> numbersToGet = new ArrayList<Integer>(); 
+        for (int k = 0; k<this.nbLinesParsed;k++) {
+        	numbersToGet.add(k);
+        	if (numbersToGet.size() == 10000) {
+        		linesToIndex = fileManager.readLines(this.name, numbersToGet);
+        		int l=0;
+        		for (HashMap<String, String> lineToIndex : linesToIndex) {
+        			newIndex.insert(lineToIndex, k+l);
+        			l++;
+        		}
+        		
+        	}
+        	
         	//System.out.println("Valeur indexee: "); 
         	//System.out.println(line[placeOfValue.get(0)]);
-        	newIndex.insert(line);	
+        	//	
         }
         System.out.println("\n");
     }
     
-    public List<Object[]> searchBigger(String nameIndex, int valueMin) throws MalformedURLException {
+    public List<HashMap<String, String>> searchBigger(String nameIndex, int valueMin) throws MalformedURLException {
     	
     	Index index = listIndex.get(nameIndex);
-    	List<Object[]> results = index.searchBigger(valueMin);
-    	if (this.mainNode) {
-    		// need to distribute the instruction
-    		results.addAll(repartisseur.searchBigger(nameIndex, valueMin));
-    	}
-    	for (Object[] line : results) {
-    		//System.out.println(line);
-    	}
+    	List<HashMap<String, String>> results = index.searchBigger(valueMin);
     	return results;
     }
     
@@ -141,59 +158,46 @@ public class Table implements Serializable {
     	return results;
     }
     
+    
+    
+    public List<HashMap<String, String>> getWithoutIndex(List<String> key, List<String> nameOfMovie){ 
+    	List<HashMap<String, String>> results = new ArrayList<HashMap<String, String>>();
+    	List<Integer> nbToGet= new ArrayList<Integer>();
+    	nbToGet.add(-1);
+    	List<HashMap<String, String>> lineToSort = this.fileManager.readLines(this.name, nbToGet);
+        for(HashMap<String, String> line : lineToSort) {
+        	int nbIndexFound = 0;//savoir combien on a trouve d elements correspondant aux valeurs recherchees
+        	int nbOfNameInIndex = 0;//savoir combientieme elemeent on en est
+        	for(String indexAvailable:key) {
+	            if(line.get(indexAvailable).equals(nameOfMovie.get(nbOfNameInIndex))) {
+	            	nbIndexFound ++;
+	            }
+	            nbOfNameInIndex++;
+        	}
+        	if (nbIndexFound == key.size()) {
+        		results.add(line);
+        	}
+        
+        }
+        return results;
+    }
+    
+    
+    
+    
     public void get(List<String> nameOfIndex1, List<String> nameOfMovie) {
     	Index index = listIndex.get(nameOfIndex1);
-    	//System.out.println(index);
-    	List<Object[]> results;
+    	
+    	List<HashMap<String, String>> results;
     	if (index == null) {
-    		
-    		results = new ArrayList<Object[]>();
-    		List<Integer> placeOfValue = new ArrayList<Integer>();
-    		int nbLine = 0;
-            for (String name : columnNames) {
-            	for (String possibleName : nameOfIndex1)
-    	            if (name.equals(possibleName)) {
-    	                placeOfValue.add(nbLine);
-    	                
-    	            } 
-                nbLine++;
-            }
-            int nbOfLineInData = 0;
-    		for (Object[] line : data) {
-    			int nbWordsOk = 0;
-    			for (int rgLine : placeOfValue) {
-    				//System.out.println(line[rgLine]);
-    				for (String nameHeader : nameOfMovie) {
-    					//System.out.println(nameHeader);
-    					
-    					
-    					if (line[rgLine].equals(nameHeader)) {
-    						nbWordsOk ++;
-    						//System.out.println(nbWordsOk);
-        					//System.out.println(line[rgLine]);
-    						
-    						
-    					}
-    				}
-    			}
-    			if (nbWordsOk>=nameOfMovie.size()){
-    				results.add(line);
-    				System.out.println(nbOfLineInData);
-    				
-    			}
-    			nbOfLineInData ++;
-    		}
-    		
-    		
+    		results = getWithoutIndex(nameOfIndex1, nameOfMovie);
     		
     	}
     	else {
     	results = index.get(nameOfMovie);
     	}
  
-    	for (Object[] line : results) {
-    		//System.out.println(line);	
-    	}
+    	
     	/*if (this.mainNode) {
     		// need to distribute the instruction
     		results.addAll(repartisseur.get(nameIndex, value));

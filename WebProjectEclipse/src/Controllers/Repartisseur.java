@@ -110,7 +110,7 @@ public class Repartisseur {
 			String instruction = "parse/" + path; 
 			sendInstructions(instruction);
 		}
-		CsvParser = new CsvParser(path);
+		CsvParser = new CsvParser(path, "Parser1");
 		listTables.add(CsvParser.getTable());
 		
 	}
