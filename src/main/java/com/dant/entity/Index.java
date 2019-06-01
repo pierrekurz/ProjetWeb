@@ -5,11 +5,15 @@ package com.dant.entity;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.gson.Gson;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Index{
+public class Index implements Serializable{
 	List<Integer> nbElementToIndex;
 
     public Index(List<Integer> nbElement) {
@@ -84,7 +88,7 @@ public class Index{
     	List<Object[]> result = new ArrayList<Object[]>() ;
     	for (List<Object> key : index.keySet()) {
     		if(Integer.parseInt((String) key.get(0)) <= valueMax) {
-    			for (Integer nbLine : index.get(key)) {
+    			for (int nbLine : index.get(key)) {
     				result.add(lines.get(nbLine));
     				System.out.println(lines.get(nbLine)[2]);
     			}	
@@ -106,5 +110,9 @@ public class Index{
             }
         }
         return res;
+    }
+    public String toString() {
+    	Gson gson=new Gson();
+    	return gson.toJson(this);
     }
 }

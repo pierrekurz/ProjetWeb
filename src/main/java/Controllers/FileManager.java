@@ -66,9 +66,9 @@ public class FileManager {
 										// arriere
 		int nextNumberToGet = 0;// Prochain numero dans la liste des lignes à recuperer qu on va chercher dans
 								// le fichier
-		try {
+		try(Scanner sc = new Scanner(currentFile)) {
 			// FileReader f = new FileReader(currentFile);
-			Scanner sc = new Scanner(currentFile);
+			
 
 			// we just need to use \\Z as delimiter
 			sc.useDelimiter("//");

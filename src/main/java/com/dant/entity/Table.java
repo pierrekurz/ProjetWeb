@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
+
 import Controllers.FileManager;
 import Controllers.Repartisseur;
 
@@ -43,7 +45,7 @@ public class Table implements Serializable {
 
     public void init(List<String> line0) throws IOException {
     	//System.out.println("Table initialisée : ");
-    	this.fileManager.createFile(this.name, line0);
+    	FileManager.createFile(this.name, line0);
         for (String row : line0) {
             this.columnNames.add(row);
             //System.out.println("Titres : ");
@@ -120,7 +122,7 @@ public class Table implements Serializable {
     
     public List<Object[]> searchBigger(String nameIndex, int valueMin) throws MalformedURLException {
     	
-    	Index index = listIndex.get(nameIndex);
+    	Index index = listIndex.get(nameIndex);//.get(nameOfMovie);
     	List<Object[]> results = index.searchBigger(valueMin);
     	if (this.mainNode) {
     		// need to distribute the instruction
@@ -202,5 +204,9 @@ public class Table implements Serializable {
     		// need to distribute the instruction
     		results.addAll(repartisseur.get(nameIndex, value));
     	}*/
+    }
+    public String toString() {
+    	Gson gson=new Gson();
+    	return gson.toJson(this);
     }
 }

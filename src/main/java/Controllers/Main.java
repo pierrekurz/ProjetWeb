@@ -98,7 +98,7 @@ public class Main {
 		
 		//CsvParser csvReader = new CsvParser("tab1", "/Users/David/Desktop/L3 DANT/S2/Web_O_Pitton/green_tripdata_2018-01.csv");
 		Table table = csvReader.getTable();   
-		 
+		 table.searchSmaller("Total_Amt", 9 );
 		 
 		 
 		 

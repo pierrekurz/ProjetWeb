@@ -1,6 +1,7 @@
 package com.dant.app;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +15,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.jboss.logging.Logger;
+
 import com.dant.entity.Table;
 //import org.json.simple.JSONObject;
 import com.google.gson.*;
 
+import Controllers.CsvParser;
 import Controllers.Repartisseur;
 
 /**
@@ -29,8 +33,8 @@ import Controllers.Repartisseur;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class Endpoint {
+	CsvParser csvReader=null;
 	Repartisseur repartisseur = new Repartisseur(true);
-	
 	@POST
 	@Path("/createMainNode")
 	public void initNodes() throws Exception {
@@ -53,13 +57,19 @@ public class Endpoint {
 		return "<b>Hello World</b>";
 	}
 	
-	@PUT
-	@Path("/parse/{path}")
-	@Produces(MediaType.TEXT_HTML)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void parseCsv(@QueryParam("path") String path) throws Exception {
-		repartisseur.ParceCSV(path);
+	@POST
+	@Path("/parse")
+	//@Produces(MediaType.TEXT_HTML)
+	@Consumes("text/csv")
+	public Response parseCsv() throws Exception {
+		//File file= new File("yellow_tripdata_2009-01.csv");
+		File file= new File("/");
+		String path=file.getAbsolutePath();
+		System.out.println(path);
+		repartisseur.ParceCSV(file.getAbsolutePath());
+		csvReader = new CsvParser("parser", "yellow_tripdata_2009-01.csv");
 		System.out.println("Fichier Parse");
+		return Response.status(200).entity("ok").build();
 	}
 	
 	
@@ -94,12 +104,12 @@ public class Endpoint {
 	@Path("/searchBigger")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public JsonObject searchBigger(
+	public List<Object[]> searchBigger(
 			@QueryParam("nameIndex") String nameIndex,
 			@QueryParam("valueMin")  int valueMin
 			) throws Exception {
 		List<Object[]> listNbLines = repartisseur.searchSmaller(nameIndex, valueMin);
-		return null;
+		return listNbLines;
 		//return (listNbLines.toJson());
 	}
 	
@@ -110,7 +120,11 @@ public class Endpoint {
 		
 	}
 	
-	
+	@GET
+	@Path("/download")
+	public Response getDl() {
+		return Response.status(200).entity("ok").build();
+	}
 	
 	
 		
