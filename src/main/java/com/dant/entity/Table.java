@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
-
 import Controllers.FileManager;
 import Controllers.Repartisseur;
 
@@ -45,7 +43,7 @@ public class Table implements Serializable {
 
     public void init(List<String> line0) throws IOException {
     	//System.out.println("Table initialisée : ");
-    	FileManager.createFile(this.name, line0);
+    	this.fileManager.createFile(this.name, line0);
         for (String row : line0) {
             this.columnNames.add(row);
             //System.out.println("Titres : ");
@@ -92,11 +90,10 @@ public class Table implements Serializable {
     }
 
     public void addIndex(List<String> nameIndex) throws MalformedURLException {
-    	System.out.println("Table.addindex ok");
-    	//if (this.mainNode == true) {
+    	if (this.mainNode == true) {
     		// need to distribute the instruction
-    		//repartisseur.addIndex(nameIndex);
-    	//}
+    		repartisseur.addIndex(nameIndex);
+    	}
     	//System.out.println("Ajout Index");
         int nbLine = 0;
         List<Integer> placeOfValue = new ArrayList<Integer>();
@@ -114,31 +111,31 @@ public class Table implements Serializable {
         Index newIndex = new Index(placeOfValue);
         listIndex.put(nameIndex, newIndex);
         for (Object[] line : data) {
-        	System.out.println("Valeur indexee: "); 
-        	System.out.println(line[placeOfValue.get(0)]);
+        	//System.out.println("Valeur indexee: "); 
+        	//System.out.println(line[placeOfValue.get(0)]);
         	newIndex.insert(line);	
         }
         System.out.println("\n");
     }
     
-    public List<Object> searchBigger(List<String> nameIndex, int valueMin) throws MalformedURLException, IOException {
+    public List<Object[]> searchBigger(String nameIndex, int valueMin) throws MalformedURLException {
     	
-    	Index index = listIndex.get(nameIndex);//.get(nameOfMovie);
-    	List<Object> results = index.searchBigger(valueMin);
+    	Index index = listIndex.get(nameIndex);
+    	List<Object[]> results = index.searchBigger(valueMin);
     	if (this.mainNode) {
     		// need to distribute the instruction
     		results.addAll(repartisseur.searchBigger(nameIndex, valueMin));
     	}
-    	for (Object line : results) {
+    	for (Object[] line : results) {
     		//System.out.println(line);
     	}
     	return results;
     }
     
-    public List<Object> searchSmaller(String nameIndex, int valueMin) throws MalformedURLException, IOException {
+    public List<Object[]> searchSmaller(String nameIndex, int valueMin) throws MalformedURLException {
     	Index index = listIndex.get(nameIndex);
-    	List<Object> results = index.searchSmaller(valueMin);
-    	for (Object line : results) {
+    	List<Object[]> results = index.searchSmaller(valueMin);
+    	for (Object[] line : results) {
     		//System.out.println(line);
     	}
     	if (this.mainNode) {
@@ -148,16 +145,9 @@ public class Table implements Serializable {
     	return results;
     }
     
-    public List<Object[]> get(List<String> nameOfIndex1, List<String> nameOfMovie) {
+    public void get(List<String> nameOfIndex1, List<String> nameOfMovie) {
     	Index index = listIndex.get(nameOfIndex1);
-    	for(Object indexAvail : listIndex.keySet()) {
-    		System.out.println("hhh");
-    		System.out.println(listIndex);
-    		System.out.println(listIndex.get(indexAvail));
-    		System.out.println(indexAvail);	
-    	}
-    	
-    	System.out.println(index);
+    	//System.out.println(index);
     	List<Object[]> results;
     	if (index == null) {
     		
@@ -206,17 +196,11 @@ public class Table implements Serializable {
     	}
  
     	for (Object[] line : results) {
-    		
     		//System.out.println(line);	
     	}
     	/*if (this.mainNode) {
     		// need to distribute the instruction
     		results.addAll(repartisseur.get(nameIndex, value));
     	}*/
-    	return results;
-    }
-    public String toString() {
-    	Gson gson=new Gson();
-    	return gson.toJson(this);
     }
 }
