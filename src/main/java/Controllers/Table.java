@@ -58,20 +58,6 @@ public class Table implements Serializable {
     	System.out.println(lines);
         
         
-    	if (mainNode) {
-    		// this is the main node
-    		/*if (this.nodeTurn != 0) {
-    			//it's not this node's turn to record the line
-    			repartisseur.addLine(lines,nodeTurn );
-    			return;
-    		}*/
-    		this.nodeTurn += 1;
-    		// next node's turn
-    		if (this.nodeTurn == this.repartisseur.otherNodes.size()) {
-    			this.nodeTurn = 0;
-    		}
-    	}
-    	
     	
     	
         //System.out.println("nb elements");

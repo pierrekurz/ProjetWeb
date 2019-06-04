@@ -19,6 +19,12 @@ public class GSONConverter {
 		 return serialized;
 		}
 	
+	public String listObjecttoJson(List<Object[]> list ){
+		 Gson gson = new Gson();
+		 String serialized = gson.toJson(list);
+		 return serialized;
+		}
+	
 	public String listToJson(List<String> lineResult ){
 		 Gson gson = new Gson();
 		 String serialized = gson.toJson(lineResult);
@@ -31,8 +37,13 @@ public class GSONConverter {
 		 HashMap<String,String> map = gson.fromJson(lineResult, HashMap.class);
 		 return map;
 		}
+
+		public List<Integer> listMapToJson(List<HashMap<String, String>> list) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 		
-		public List<String> jsonToList(String lineResult){
+		/*public List<String> jsonToList(String lineResult){
 			 Gson gson = null;
 			 List<String> map = gson.fromJson(lineResult, HashMap.class);
 			 return map;
@@ -48,7 +59,7 @@ public class GSONConverter {
 			Gson gson = new Gson();
 			 String serialized = gson.toJson(lineResult);
 			 return serialized;
-		}
+		}*/
 
 		
 }

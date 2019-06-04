@@ -83,7 +83,7 @@ public class Endpoint {
 	}
 	
 	
-	@GET
+	/*@GET
 	@Path("/headers")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -92,7 +92,7 @@ public class Endpoint {
 			@QueryParam("nameTable") String nameTable
 			) throws Exception {
 		repartisseur.addHeader(listHeaders, nameTable);
-	}
+	}*/
 	
 	
 	
@@ -105,7 +105,7 @@ public class Endpoint {
 	}
 	
 	
-	@POST
+	/*@POST
 	@Path("/addLines")
 	//@Produces(MediaType.TEXT_HTML)
 	@Consumes("text/csv")
@@ -139,7 +139,7 @@ public class Endpoint {
 		System.out.println(repartisseur.getListTables().get(0).toString());
 		return Response.status(200).entity("ok").build();
  
-	}
+	}*/
 	
 	
 	
@@ -218,12 +218,12 @@ public class Endpoint {
 		//return (listNbLines.toJson());
 	}
 	
-	@GET
+	/*@GET
 	@Path("/tables")
 	public HashMap<String, Controllers.Table> getTables() {
 		return repartisseur.getListTables();
 		
-	}
+	}*/
 	
 	@GET
 	@Path("/download")

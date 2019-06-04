@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 public class Table implements Serializable {
-    private String name;
+   /* private String name;
     Boolean mainNode;
     //private Map<String, Index> index = new HashMap<>();
     List<String> columnNames = new ArrayList<String>();
@@ -59,7 +59,7 @@ public class Table implements Serializable {
     			//it's not this node's turn to record the line
     			repartisseur.addLine(lines,nodeTurn );
     			return;
-    		}*/
+    		}*//*
     		this.nodeTurn += 1;
     		// next node's turn
     		if (this.nodeTurn == this.repartisseur.getOtherNodes().size()) {
@@ -72,7 +72,7 @@ public class Table implements Serializable {
         for (Object[] line : lines) {
         	/*System.out.println(line[0]);
         	System.out.println(line[1]);
-        	System.out.println(line[2]);*/
+        	System.out.println(line[2]);
         	//System.out.println(llklk );
         	llklk ++;
            
@@ -202,5 +202,5 @@ public class Table implements Serializable {
     		// need to distribute the instruction
     		results.addAll(repartisseur.get(nameIndex, value));
     	}*/
-    }
+    
 }
