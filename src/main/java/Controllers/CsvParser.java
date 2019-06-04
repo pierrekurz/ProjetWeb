@@ -15,9 +15,12 @@ public class CsvParser {
 	int turnRepartition = 0;
 	
 	public CsvParser(String name, String path,  Repartisseur repartisseur) throws Exception {
+
+		
 		this.name = name;
-		this.table = parseCsv(path, this.name);
+		
 		this.repartisseur = repartisseur;
+		this.table = parseCsv(path, this.name);
 	}
 	
 	public Table getTable(){
@@ -66,10 +69,10 @@ public class CsvParser {
             //compteurColonne++;
             headersTable.add(nameColonne);
             
-           
-            
-            repartisseur.sendHeaders(headersTable, nameOfTable);
-            
+            System.out.println("ici1");
+            System.out.println(repartisseur);
+            this.repartisseur.sendHeaders(headersTable,nameOfTable);
+            System.out.println("ici");
             System.out.println(nameColonne);
             table.init(headersTable);
             /*System.out.println("kkk 1");

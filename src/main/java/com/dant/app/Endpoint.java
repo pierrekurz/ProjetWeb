@@ -35,12 +35,13 @@ import Controllers.Repartisseur;
 @Consumes(MediaType.APPLICATION_JSON)
 public class Endpoint {
 	CsvParser csvReader=null;
-	Repartisseur repartisseur = new Repartisseur(true);
+	Repartisseur repartisseur = new Repartisseur(false) ;
 	@POST
 	@Path("/createMainNode")
 	public void initNodes() throws Exception {
 		System.out.println("test create mainNode");
-		repartisseur = new Repartisseur(true);
+		this.repartisseur = new Repartisseur(true);
+		System.out.println(this.repartisseur);
 	}
 	
 	@POST
@@ -49,8 +50,9 @@ public class Endpoint {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void joinNodes(@QueryParam("mainPort") int mainPort, @QueryParam("portNb") int portSecond) throws Exception {
 		System.out.println("test join mainNode");
-		repartisseur = new Repartisseur(false);
-		repartisseur.joinMainNode(mainPort, portSecond);
+		this.repartisseur = new Repartisseur(false);
+		this.repartisseur.joinMainNode(mainPort, portSecond);
+		
 	}
 	
 	
@@ -69,13 +71,14 @@ public class Endpoint {
 	@POST
 	@Path("/parse")
 	//@Produces(MediaType.TEXT_HTML)
-	@Consumes("text/csv")
+	//@Consumes("text/csv")
 	public Response parseCsv(
 			@QueryParam("pathToFile") String pathToFile, 
 			@QueryParam("nameOfFile") String nameOfFile
 			) throws Exception {
 		//csvReader = new CsvParser(pathToFile, nameOfFile);
-		repartisseur.ParceCSV(pathToFile, nameOfFile);
+		
+		this.repartisseur.ParceCSV(pathToFile, nameOfFile, this.repartisseur);
 		//repartisseur.getListTables().add(csvReader.getTable());
 
 		System.out.println("Fichier Parse");
@@ -83,7 +86,7 @@ public class Endpoint {
 	}
 	
 	
-	/*@GET
+	@GET
 	@Path("/headers")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -92,7 +95,7 @@ public class Endpoint {
 			@QueryParam("nameTable") String nameTable
 			) throws Exception {
 		repartisseur.addHeader(listHeaders, nameTable);
-	}*/
+	}
 	
 	
 	
@@ -105,7 +108,7 @@ public class Endpoint {
 	}
 	
 	
-	/*@POST
+	@POST
 	@Path("/addLines")
 	//@Produces(MediaType.TEXT_HTML)
 	@Consumes("text/csv")
@@ -119,7 +122,7 @@ public class Endpoint {
 	
 	
 	
-	@PUT
+	@POST
 	@Path("/addIndex")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -130,16 +133,30 @@ public class Endpoint {
 			) throws Exception {
 		
 		List<String> listNameColumns = new ArrayList<String>();
-		//for (String word : nameIndex ) {
-			listNameColumns.add(nameIndex);
-		//}
-		repartisseur.addIndex(listNameColumns, nameFile);
-		//repartisseur.sendInstructions("");
-		System.out.println("Index ajoute");
+		
+		
+		
+		int sizeOfIndex = nameIndex.length();
+		String word = "";
+		for(int l = 0; l<sizeOfIndex; l++) {
+			if(nameIndex.charAt(l) == '/') {
+				listNameColumns.add(word);
+				l++;
+			}
+			else {
+				word+=nameIndex.charAt(l);
+			}
+		}
+		
+
+			System.out.println("Index ajoute");
+		this.repartisseur.addIndex(listNameColumns, nameFile);
+		
+		
 		System.out.println(repartisseur.getListTables().get(0).toString());
 		return Response.status(200).entity("ok").build();
  
-	}*/
+	}
 	
 	
 	
@@ -218,12 +235,12 @@ public class Endpoint {
 		//return (listNbLines.toJson());
 	}
 	
-	/*@GET
+	@GET
 	@Path("/tables")
 	public HashMap<String, Controllers.Table> getTables() {
 		return repartisseur.getListTables();
 		
-	}*/
+	}
 	
 	@GET
 	@Path("/download")

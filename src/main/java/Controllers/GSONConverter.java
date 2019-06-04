@@ -19,9 +19,9 @@ public class GSONConverter {
 		 return serialized;
 		}
 	
-	public String listObjecttoJson(List<Object[]> list ){
+	public String listObjecttoJson(List<Object> lineResult ){
 		 Gson gson = new Gson();
-		 String serialized = gson.toJson(list);
+		 String serialized = gson.toJson(lineResult);
 		 return serialized;
 		}
 	

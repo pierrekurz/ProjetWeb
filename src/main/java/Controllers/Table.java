@@ -93,7 +93,7 @@ public class Table implements Serializable {
     		// need to distribute the instruction
     		repartisseur.addIndex(nameIndex);
     	}*/
-    	//System.out.println("Ajout Index");
+    	System.out.println("Ajout Index");
         int nbLine = 0;
         List<Integer> placeOfValue = new ArrayList<Integer>();
         for (String name : columnNames) {
@@ -103,13 +103,14 @@ public class Table implements Serializable {
 	            } 
             nbLine++;
         }
+        System.out.println("Ici6");
         //System.out.println("nb elements");
         //System.out.println(data.size());
         //System.out.println(placeOfValue);
         
         Index newIndex = new Index(placeOfValue, nameIndex, this.name);
         listIndex.put(nameIndex, newIndex);
-
+        System.out.println("Ici7");
     	List<HashMap<String, String>> linesToIndex;
     	List<Integer> numbersToGet = new ArrayList<Integer>();
         for (int k = 0; k<this.nbLinesParsed;k++) {
@@ -124,7 +125,7 @@ public class Table implements Serializable {
         		
         	}
         	
-        	//System.out.println("Valeur indexee: "); 
+        	System.out.println("Valeur indexee: "); 
         	//System.out.println(line[placeOfValue.get(0)]);
         	//	
         }

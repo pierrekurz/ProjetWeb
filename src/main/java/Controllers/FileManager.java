@@ -22,6 +22,7 @@ public class FileManager {
 	public static void createFile(String nameFile, List<String> nameHeaders) throws IOException {
 		File file=new File(nameFile); 
 		file.createNewFile();
+		System.out.println(file.getAbsolutePath());
 		fileAvailable.put(nameFile, file);// on l'enregistre
 		headersInFile.put(nameFile, nameHeaders);// on enregistre ses headers
 	}
