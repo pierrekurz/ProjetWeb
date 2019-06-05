@@ -5,6 +5,7 @@ package Controllers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,14 +57,43 @@ public class Index{
        
     
     public List<HashMap<String, String>> get(List<String> nameOfMovie) {
-        List<Integer> rows = index.get(nameOfMovie);
+    	boolean all = false;
+        for (String name : nameOfMovie) {
+        	if(name=="all") {
+        		all = true;
+        	}
+        }
+        
+        List<Integer> rows;
+    	if(!all) {
+    		rows = index.get(nameOfMovie);
+    	}
+    	else {
+    		rows = new ArrayList<Integer>();
+    		Set<List<Object>> l = index.keySet();
+    		for( Object key : l) {
+    			
+    			for (Integer line: index.get(key) ) {
+    				rows.add(line);
+    			}
+    		}
+    
+    			
+    	}
+    	
         System.out.println(nameOfMovie);
         System.out.println(index);
+        
+        
+        
         if(rows==null) {
         	System.out.println("jkjk");
             
             return null;
         }
+        
+        
+        
         List<HashMap<String, String>> result = new ArrayList<>();
         
         int k=0;
@@ -72,6 +102,7 @@ public class Index{
         	row.add(rows.get(k));
         	if (row.size()==10000) {
         		result.addAll(this.fileManager.readLines(this.nameFile, row));
+        		
         		row = new ArrayList<Integer>();
         	}
         	k++;

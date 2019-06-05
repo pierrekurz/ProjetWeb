@@ -1,7 +1,11 @@
 package com.dant.app;
 
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +18,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 
+import org.apache.http.protocol.RequestContent;
 import org.jboss.logging.Logger;
 
 import com.dant.entity.Table;
@@ -87,6 +93,23 @@ public class Endpoint {
 		return Response.status(200).entity("ok").build();
 	}
 	
+	@POST
+	@Path("/addLinesFromFile")
+	//@Produces(MediaType.TEXT_HTML)
+	//@Consumes(MediaType.APPLICATION_JSON)
+	public Response addLinesFromFile(
+			@QueryParam("path") String path, 
+			@QueryParam("nameFile") String nameFile
+			) throws Exception {
+		
+		
+		//System.out.println(lines);
+		repartisseur.addLinesFromFile(path, nameFile);
+		System.out.println("end added");
+		return Response.status(200).entity("ok").build();
+		
+	}
+	
 	
 	@POST
 	@Path("/headers")
@@ -113,17 +136,23 @@ public class Endpoint {
 	@POST
 	@Path("/addLines")
 	//@Produces(MediaType.TEXT_HTML)
-	@Consumes("text/csv")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addLines(
 			@QueryParam("lines") String lines, 
-			@QueryParam("nameFile") String nameFile
+			@QueryParam("nameFile") String nameFile, 
+			String JSON
 			) throws Exception {
-		System.out.println("Lines are added");
+		
+		System.out.println("JSON");
+		System.out.println("end added");
+		//System.out.println(lines);
 		repartisseur.addLines(lines, nameFile);
 		System.out.println("end added");
 		return Response.status(200).entity("ok").build();
 		
 	}
+	
+	
 	
 	
 	

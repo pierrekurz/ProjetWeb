@@ -4,13 +4,25 @@ package Controllers;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.ws.rs.core.Request;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -88,9 +100,9 @@ public class Repartisseur {
 	// Main functions to be shared 
 	public void addIndex(List<String> nameIndex, String nameFile) throws IOException {
 		//add an Index
-		System.out.println("Ici1");
+		
 		if (this.mainNode) {
-			System.out.println("Ici12");
+			
 			String instruction = "addIndex?";
 			instruction += "nameIndex=";
 			instruction += nameIndex;
@@ -99,10 +111,9 @@ public class Repartisseur {
 			String otherNodesAnswers = sendInstructions(instruction, null, "POST");
 			
 		}
-		System.out.println("Ici4");
 		System.out.println(listTables);
 		listTables.get(nameFile).addIndex(nameIndex);
-		System.out.println("Ici5");
+		
 		
 	}
 
@@ -137,7 +148,7 @@ public class Repartisseur {
 	
 	public String get(String nameTable, List<String> listIndex, List<String> listValue) throws IOException {
 		// getting the values thanks to inde
-		System.out.println("Reprtisseur get");
+		
 		
 		String result = "";
 		if(this.mainNode) {
@@ -173,16 +184,21 @@ public class Repartisseur {
 			instruction += "/api/addLines?";
 			instruction += "nameFile=";
 			instruction += nameFile;
+			//instruction += "&lines=";
 			String JSON;
+			StringEntity ex; 
 			
 			if(k+nbLinesToSend<=lines.size()) {
 				JSON = this.gson.toJson(lines.subList(k, k+nbLinesToSend));
+				ex = new StringEntity(JSON, "UTF-8");
 			}
 			else {
 				JSON = this.gson.toJson(lines.subList(k, lines.size()));
+				ex = new StringEntity(JSON, "UTF-8");
 				
 			}
 			
+			//instruction += JSON;
 			String nameUrl = "http://localhost:";
 			
 			
@@ -190,18 +206,39 @@ public class Repartisseur {
 			nameUrl += instruction;
 			
 			URL url = new URL(nameUrl);
-			HttpURLConnection con = (HttpURLConnection)url.openConnection();
-			con.setRequestMethod("POST");
 			
 			
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String inputLine;
-			StringBuffer content = new StringBuffer();
-			while ((inputLine = in.readLine()) != null) {
-					    content.append(inputLine);
-					}
+			HttpClient client = HttpClientBuilder.create().build();
+			HttpPost requ = new HttpPost(nameUrl);
 			
-			in.close();
+			
+			
+			requ.setEntity(ex);
+			
+			
+			HttpURLConnection http = (HttpURLConnection)url.openConnection();
+			
+			byte[] out = JSON.getBytes(StandardCharsets.UTF_8);
+			int length = out.length;
+
+			http.setFixedLengthStreamingMode(length);
+			http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+			http.connect();
+			System.out.println("envoi line7");
+			
+			http.setDoOutput(true);
+			System.out.println("envoi line9");
+			try(OutputStream os = http.getOutputStream()) {
+				
+			    os.write(out);
+			}
+			System.out.println("envoi line8");
+			//HttpURLConnection con = (HttpURLConnection)url.openConnection();
+			
+			//con.setRequestMethod("POST");
+			
+			//System.out.println(response);
+			System.out.println("envoi line5");
 
 			
 	
@@ -219,10 +256,9 @@ public class Repartisseur {
 		System.out.println("dans Fichier Parse out");
 		System.out.println(this.mainNode);
 		//if (this.mainNode) {
-			System.out.println("dans Fichier Parse");
-			CsvParser = new CsvParser(nameOfFile, path, repartisseur);
-			
-		//}
+		System.out.println("dans Fichier Parse");
+		CsvParser = new CsvParser(nameOfFile, path, repartisseur);
+
 		
 		this.listTables.put(nameOfFile, CsvParser.getTable());
 		
@@ -256,7 +292,7 @@ public class Repartisseur {
 	public void addHeader(String listHeaders, String nameTable) throws IOException {
 		// Send the headers of the table to other nodes
 		Table table = new Table(nameTable);
-		System.out.println("Decode les headers");
+		
 		System.out.println(this.getOtherNodesPort());
 		List<String> header = this.gson.fromJson(listHeaders, List.class);
 		table.init(header);
@@ -269,9 +305,18 @@ public class Repartisseur {
 
 	public void addLines(String lines, String nameTable) throws IOException {
 		Table table = this.listTables.get(nameTable);
-		System.out.println("Adding lines from repartisseur");
+		//System.out.println("Adding lines from repartisseur");
 		List<Object[]> linesToAdd = this.gson.fromJson(lines, List.class);
 		table.addLines(linesToAdd);
+		
+		
+	}
+
+	public void addLinesFromFile(String path, String nameFile) throws Exception {
+		CsvParser parser = this.CsvParser;
+		
+		parser.parseCsvToFile(path, nameFile);
+		
 		
 		
 	}

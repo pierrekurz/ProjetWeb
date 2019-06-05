@@ -42,7 +42,7 @@ public class Table implements Serializable {
     }
 
     public void init(List<String> line0) throws IOException {
-    	System.out.println(line0);
+    	
     	this.headers = line0;
     	this.fileManager.createFile(this.name, line0);
         for (String row : line0) {
@@ -54,14 +54,7 @@ public class Table implements Serializable {
     }
 
     public void addLines(List<Object[]> lines) throws IOException {
-    	System.out.println("ajout lignes");
-    	System.out.println(lines);
-        
-        
-    	
-    	
-        //System.out.println("nb elements");
-        //System.out.println(data.size());
+ 
         this.fileManager.writeLines(this.name, lines);
         
         List<HashMap<String, String>> listformatedLine = new ArrayList<HashMap<String, String>>();
@@ -103,14 +96,14 @@ public class Table implements Serializable {
 	            } 
             nbLine++;
         }
-        System.out.println("Ici6");
+        
         //System.out.println("nb elements");
         //System.out.println(data.size());
         //System.out.println(placeOfValue);
         
         Index newIndex = new Index(placeOfValue, nameIndex, this.name);
         listIndex.put(nameIndex, newIndex);
-        System.out.println("Ici7");
+       
     	List<HashMap<String, String>> linesToIndex;
     	List<Integer> numbersToGet = new ArrayList<Integer>();
         for (int k = 0; k<this.nbLinesParsed;k++) {
@@ -125,9 +118,7 @@ public class Table implements Serializable {
         		
         	}
         	
-        	System.out.println("Valeur indexee: "); 
-        	//System.out.println(line[placeOfValue.get(0)]);
-        	//	
+        	
         }
     		linesToIndex = fileManager.readLines(this.name, numbersToGet);
     		int l=0;

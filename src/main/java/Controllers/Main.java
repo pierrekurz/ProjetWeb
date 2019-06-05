@@ -90,7 +90,7 @@ public class Main {
 		 //CsvParser csvReader = new CsvParser("/Users/David/Documents/GitHub/ProjetWeb/deniro.csv");
 		 
 		 
-		/*CsvParser csvReader = new CsvParser("tab1","/Users/David/Desktop/wine_data.csv", null);
+		CsvParser csvReader = new CsvParser("tab1","yellow_tripdata_2015-08.csv", null);
 		//Table table = csvReader.getTable();   
 		
 		//CsvParser csvReader = new CsvParser("tab1", "/Users/David/Desktop/L3 DANT/S2/Web_O_Pitton/green_tripdata_2018-01.csv");
@@ -101,7 +101,7 @@ public class Main {
 		List<String> nameVendor = new ArrayList<String>();
 		nameVendor.add("2.43");
 		table.get(nameIndex, nameVendor);
-		 */
+		 
 		 
 		 
 		 
