@@ -50,33 +50,35 @@ public class Repartisseur {
 	// calling other nodes' API
 	public String sendInstructions(String Instruction, String JSON, String typeRequest) throws IOException {
 		System.out.println("Sending instruction");
+		System.out.println(this.otherNodes);
 		String otherNodesAnswers = "";
 		for (Integer port : this.otherNodes) {
-			String nameUrl = beginingUrl;
-			
-			nameUrl += port.toString();
-			nameUrl += "/";
-			nameUrl += Instruction;
-			System.out.println(nameUrl);
-			
-			if(JSON!= null) {
-				nameUrl += JSON;
-			}
-			System.out.println("Instruction written");
-			URL url = new URL(nameUrl);
-			HttpURLConnection con = (HttpURLConnection)url.openConnection();
-			con.setRequestMethod(typeRequest);
-			
-			
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String inputLine;
-			StringBuffer content = new StringBuffer();
-			while ((inputLine = in.readLine()) != null) {
-					    content.append(inputLine);
-					}
-			in.close();
-			otherNodesAnswers += content.toString();
-			System.out.println("Instrction sent");
+				String nameUrl = beginingUrl;
+				
+				nameUrl += port.toString();
+				nameUrl += "/";
+				nameUrl += Instruction;
+				System.out.println(nameUrl);
+				
+				if(JSON!= null) {
+					nameUrl += JSON;
+				}
+				System.out.println("Instruction written");
+				URL url = new URL(nameUrl);
+				HttpURLConnection con = (HttpURLConnection)url.openConnection();
+				con.setRequestMethod(typeRequest);
+				
+				
+				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				String inputLine;
+				StringBuffer content = new StringBuffer();
+				while ((inputLine = in.readLine()) != null) {
+						    content.append(inputLine);
+						}
+				
+				otherNodesAnswers += content.toString();
+				in.close();
+				System.out.println("Instrction sent");
 		}
 		return otherNodesAnswers;
 	
@@ -198,6 +200,7 @@ public class Repartisseur {
 			while ((inputLine = in.readLine()) != null) {
 					    content.append(inputLine);
 					}
+			
 			in.close();
 
 			
@@ -239,11 +242,11 @@ public class Repartisseur {
 
 	public void sendHeaders(List<String> headersTable, String nameTable) throws IOException {
 		
-		String instruction = "headers";
-		instruction += "?nameTable";
+		String instruction = "api/headers";
+		instruction += "?nameTable=";
 		instruction += nameTable;
-		instruction += "?listHeaders";
-		String JSON = this.gSONConverter.listToJson(headersTable);
+		instruction += "&listHeaders=";
+		String JSON = gson.toJson(headersTable);
 		this.sendInstructions(instruction, JSON, "POST");
 		
 	}
@@ -252,7 +255,9 @@ public class Repartisseur {
 	
 	public void addHeader(String listHeaders, String nameTable) throws IOException {
 		// Send the headers of the table to other nodes
-		Table table = new Table("secondary");
+		Table table = new Table(nameTable);
+		System.out.println("Decode les headers");
+		System.out.println(this.getOtherNodesPort());
 		List<String> header = this.gson.fromJson(listHeaders, List.class);
 		table.init(header);
 		this.listTables.put(nameTable, table);
@@ -264,6 +269,7 @@ public class Repartisseur {
 
 	public void addLines(String lines, String nameTable) throws IOException {
 		Table table = this.listTables.get(nameTable);
+		System.out.println("Adding lines from repartisseur");
 		List<Object[]> linesToAdd = this.gson.fromJson(lines, List.class);
 		table.addLines(linesToAdd);
 		

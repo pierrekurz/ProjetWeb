@@ -42,7 +42,7 @@ public class Table implements Serializable {
     }
 
     public void init(List<String> line0) throws IOException {
-    	//System.out.println("Table initialisée : ");
+    	System.out.println(line0);
     	this.headers = line0;
     	this.fileManager.createFile(this.name, line0);
         for (String row : line0) {

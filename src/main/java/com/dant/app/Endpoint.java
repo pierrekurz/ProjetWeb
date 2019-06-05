@@ -88,7 +88,7 @@ public class Endpoint {
 	}
 	
 	
-	@GET
+	@POST
 	@Path("/headers")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_JSON)
