@@ -50,8 +50,6 @@ public class Index{
         }
         //System.out.println(line[this.nbElementToIndex]);
         rows.add(nbOfLine);
-        System.out.println("kkk");
-        System.out.println(index);
         
         
     }

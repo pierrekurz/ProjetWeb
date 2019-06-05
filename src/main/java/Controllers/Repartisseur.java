@@ -1,7 +1,10 @@
 package Controllers;
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,6 +24,7 @@ public class Repartisseur {
 	int nbMainNode = 8080;
 	GSONConverter gSONConverter = new GSONConverter();
 	private final Gson gson = new GsonBuilder().serializeNulls().create();
+	final String beginingUrl = "http://localhost:";
 	
 	public Repartisseur(Boolean mainNode){
 		//Creation du repartisseur
@@ -33,6 +37,10 @@ public class Repartisseur {
 		this.otherNodes.add(nbNode);// ajout d'un autre noeud
 	}
 	
+	public List<Integer> getOtherNodesPort() {
+		return otherNodes;
+	}
+	
 	
 	/*public void addIndex(List<String> nameIndex) throws MalformedURLException {
 		listTables.get(0).addIndex(nameIndex);
@@ -40,21 +48,35 @@ public class Repartisseur {
 	
 	
 	// calling other nodes' API
-	public String sendInstructions(String Instruction, String JSON) throws MalformedURLException {
+	public String sendInstructions(String Instruction, String JSON, String typeRequest) throws IOException {
+		System.out.println("Sending instruction");
 		String otherNodesAnswers = "";
 		for (Integer port : this.otherNodes) {
-			String nameUrl = "http://";
+			String nameUrl = beginingUrl;
+			
 			nameUrl += port.toString();
+			nameUrl += "/";
 			nameUrl += Instruction;
+			System.out.println(nameUrl);
+			
 			if(JSON!= null) {
 				nameUrl += JSON;
 			}
+			System.out.println("Instruction written");
 			URL url = new URL(nameUrl);
-			// Mettre appel http aux autres noeuds
-			/* Object answer = port.instruction(); 
-			 * otherNodesAnswers.add();
-			 * 
-			 */
+			HttpURLConnection con = (HttpURLConnection)url.openConnection();
+			con.setRequestMethod(typeRequest);
+			
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer content = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+					    content.append(inputLine);
+					}
+			in.close();
+			otherNodesAnswers += content.toString();
+			System.out.println("Instrction sent");
 		}
 		return otherNodesAnswers;
 	
@@ -62,7 +84,7 @@ public class Repartisseur {
 
 	
 	// Main functions to be shared 
-	public void addIndex(List<String> nameIndex, String nameFile) throws MalformedURLException {
+	public void addIndex(List<String> nameIndex, String nameFile) throws IOException {
 		//add an Index
 		System.out.println("Ici1");
 		if (this.mainNode) {
@@ -72,7 +94,7 @@ public class Repartisseur {
 			instruction += nameIndex;
 			instruction += "&nameFile=";
 			instruction += nameFile;
-			String otherNodesAnswers = sendInstructions(instruction, null);
+			String otherNodesAnswers = sendInstructions(instruction, null, "POST");
 			
 		}
 		System.out.println("Ici4");
@@ -111,18 +133,18 @@ public class Repartisseur {
 	}*/
 	
 	
-	public String get(String nameTable, List<String> listIndex, List<String> listValue) throws MalformedURLException {
+	public String get(String nameTable, List<String> listIndex, List<String> listValue) throws IOException {
 		// getting the values thanks to inde
 		System.out.println("Reprtisseur get");
 		
 		String result = "";
 		if(this.mainNode) {
-			String instruction = "get?";
+			String instruction = "/get?";
 			instruction += "nameIndex=";
 			instruction += this.gSONConverter.listToJson(listIndex);
 			instruction += "&value=";
 			instruction += this.gSONConverter.listToJson(listValue);
-			result+=this.sendInstructions(instruction, null);
+			result+=this.sendInstructions(instruction, null, "GET");
 			 
 		}
 		System.out.println("get here");
@@ -140,13 +162,13 @@ public class Repartisseur {
 		
 	}
 	
-	public void sendLines(List<Object[]> lines, String nameFile) throws MalformedURLException {
+	public void sendLines(List<Object[]> lines, String nameFile) throws IOException {
 		int nbLinesToSend = (int)(lines.size()/this.otherNodes.size());
 		int k = 0;
 		for(int node : this.otherNodes) {
 			
 			String instruction = ((Integer)node).toString();
-			instruction += "/addLines?";
+			instruction += "/api/addLines?";
 			instruction += "nameFile=";
 			instruction += nameFile;
 			String JSON;
@@ -158,7 +180,29 @@ public class Repartisseur {
 				JSON = this.gson.toJson(lines.subList(k, lines.size()));
 				
 			}
-			this.sendInstructions(instruction, JSON);
+			
+			String nameUrl = "http://localhost:";
+			
+			
+			
+			nameUrl += instruction;
+			
+			URL url = new URL(nameUrl);
+			HttpURLConnection con = (HttpURLConnection)url.openConnection();
+			con.setRequestMethod("POST");
+			
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer content = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+					    content.append(inputLine);
+					}
+			in.close();
+
+			
+	
+			
 		}
 		
 		
@@ -169,33 +213,38 @@ public class Repartisseur {
 
 
 	public void ParceCSV( String nameOfFile, String path, Repartisseur repartisseur) throws Exception {
-
-		if (this.mainNode) {
+		System.out.println("dans Fichier Parse out");
+		System.out.println(this.mainNode);
+		//if (this.mainNode) {
+			System.out.println("dans Fichier Parse");
 			CsvParser = new CsvParser(nameOfFile, path, repartisseur);
 			
-		}
+		//}
 		
 		this.listTables.put(nameOfFile, CsvParser.getTable());
 		
 	}
 
-	public void joinMainNode(int mainNode, int portSecond) throws MalformedURLException {
+	public void joinMainNode(int mainNode, int portSecond) throws IOException {
+		System.out.println("Joining");
 		this.nbMainNode = mainNode;
 		this.otherNodes.add(mainNode);
-		String instruction = "connect/";
+		String instruction = "api/connect?portNb=";
+		System.out.println("Joined");
 		instruction += ((Integer)portSecond).toString();
-		this.sendInstructions(instruction, null);
+		this.sendInstructions(instruction, null, "GET");
+		System.out.println("Joined");
 		
 	}
 
-	public void sendHeaders(List<String> headersTable, String nameTable) throws MalformedURLException {
+	public void sendHeaders(List<String> headersTable, String nameTable) throws IOException {
 		
 		String instruction = "headers";
 		instruction += "?nameTable";
 		instruction += nameTable;
 		instruction += "?listHeaders";
 		String JSON = this.gSONConverter.listToJson(headersTable);
-		this.sendInstructions(instruction, JSON);
+		this.sendInstructions(instruction, JSON, "POST");
 		
 	}
 

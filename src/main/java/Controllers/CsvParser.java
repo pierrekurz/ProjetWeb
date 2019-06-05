@@ -160,6 +160,7 @@ public class CsvParser {
                 } 
             }
             table.addLines(listLinesAvailable);
+            this.repartisseur.sendLines(listLinesToBeSent, this.name);
             
             System.out.println("done!");
             

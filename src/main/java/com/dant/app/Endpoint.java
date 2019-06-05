@@ -63,8 +63,10 @@ public class Endpoint {
 	public void connect(
 			@QueryParam("portNb") int portSecond
 			) throws Exception {
-		
+		System.out.println("New venant");
 		repartisseur.addNode(portSecond);
+		
+		System.out.println("the new is added");
 	}
 	
 	
@@ -77,7 +79,7 @@ public class Endpoint {
 			@QueryParam("nameOfFile") String nameOfFile
 			) throws Exception {
 		//csvReader = new CsvParser(pathToFile, nameOfFile);
-		
+		System.out.println("Fichier Parse1");
 		this.repartisseur.ParceCSV(nameOfFile, pathToFile, this.repartisseur);
 		//repartisseur.getListTables().add(csvReader.getTable());
 
@@ -116,8 +118,11 @@ public class Endpoint {
 			@QueryParam("lines") String lines, 
 			@QueryParam("nameFile") String nameFile
 			) throws Exception {
+		System.out.println("Lines are added");
 		repartisseur.addLines(lines, nameFile);
+		System.out.println("end added");
 		return Response.status(200).entity("ok").build();
+		
 	}
 	
 	
