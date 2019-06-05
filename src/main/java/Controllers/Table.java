@@ -157,7 +157,7 @@ public class Table implements Serializable {
     
     
     
-    public List<HashMap<String, String>> getWithoutIndex(List<String> key, List<String> nameOfMovie){ 
+    public List<HashMap<String, String>> getWithoutIndex(List<String> key, List<String> valueToGet){ 
     	List<HashMap<String, String>> results = new ArrayList<HashMap<String, String>>();
     	List<Integer> nbToGet= new ArrayList<Integer>();
     	nbToGet.add(-1);
@@ -166,7 +166,7 @@ public class Table implements Serializable {
         	int nbIndexFound = 0;//savoir combien on a trouve d elements correspondant aux valeurs recherchees
         	int nbOfNameInIndex = 0;//savoir combientieme elemeent on en est
         	for(String indexAvailable:key) {
-	            if(line.get(indexAvailable).equals(nameOfMovie.get(nbOfNameInIndex))) {
+	            if(line.get(indexAvailable).equals(valueToGet.get(nbOfNameInIndex))) {
 	            	nbIndexFound ++;
 	            }
 	            nbOfNameInIndex++;
@@ -182,17 +182,21 @@ public class Table implements Serializable {
     
     
     
-    public List<HashMap<String, String>> get(List<String> nameOfIndex1, List<String> nameOfMovie) {
+    public List<HashMap<String, String>> get(List<String> nameOfIndex1, List<String> valueToGet) {
     	Index index = listIndex.get(nameOfIndex1);
+    	
+    	if (index==null) {
+    		return getWithoutIndex(nameOfIndex1,valueToGet);
+    	}
     	
     	List<HashMap<String, String>> results;
     	if (index == null) {
-    		results = getWithoutIndex(nameOfIndex1, nameOfMovie);
+    		results = getWithoutIndex(nameOfIndex1, valueToGet);
     		
     	}
     	else {
 		System.out.println("passe par la");	
-    	results = index.get(nameOfMovie);
+    	results = index.get(valueToGet);
     	}
     	
     	return results;

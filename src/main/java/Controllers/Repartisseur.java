@@ -23,13 +23,14 @@ public class Repartisseur {
 	private final Gson gson = new GsonBuilder().serializeNulls().create();
 	
 	public Repartisseur(Boolean mainNode){
+		//Creation du repartisseur
 		System.out.println("repartisseur cree");
-		this.mainNode = mainNode;
-		this.otherNodes = new ArrayList();
+		this.mainNode = mainNode;// est il noeud principal?
+		this.otherNodes = new ArrayList();// liste des autres noeuds
 	}
 	
 	public void addNode(int nbNode) {
-		this.otherNodes.add(nbNode);
+		this.otherNodes.add(nbNode);// ajout d'un autre noeud
 	}
 	
 	
@@ -62,7 +63,7 @@ public class Repartisseur {
 	
 	// Main functions to be shared 
 	public void addIndex(List<String> nameIndex, String nameFile) throws MalformedURLException {
-		//Attention, verifier le nom de l'endPoint
+		//add an Index
 		System.out.println("Ici1");
 		if (this.mainNode) {
 			System.out.println("Ici12");
@@ -75,7 +76,7 @@ public class Repartisseur {
 			
 		}
 		System.out.println("Ici4");
-		System.out.println(listTables.get(nameFile));
+		System.out.println(listTables);
 		listTables.get(nameFile).addIndex(nameIndex);
 		System.out.println("Ici5");
 		
@@ -110,9 +111,9 @@ public class Repartisseur {
 	}*/
 	
 	
-	public String get(List<String> listIndex, List<String> listValue) throws MalformedURLException {
-		
-		
+	public String get(String nameTable, List<String> listIndex, List<String> listValue) throws MalformedURLException {
+		// getting the values thanks to inde
+		System.out.println("Reprtisseur get");
 		
 		String result = "";
 		if(this.mainNode) {
@@ -124,6 +125,8 @@ public class Repartisseur {
 			result+=this.sendInstructions(instruction, null);
 			 
 		}
+		System.out.println("get here");
+		result += this.listTables.get(nameTable).get(listIndex, listValue);
 		
 		
 		return result;
@@ -134,8 +137,6 @@ public class Repartisseur {
 		String instruction = "addLine/";
 		instruction += this.otherNodes.get(nodeNumber);
 		instruction += lines;
-		
-		
 		
 	}
 	
@@ -170,7 +171,7 @@ public class Repartisseur {
 	public void ParceCSV( String nameOfFile, String path, Repartisseur repartisseur) throws Exception {
 
 		if (this.mainNode) {
-			CsvParser = new CsvParser(path, nameOfFile, repartisseur);
+			CsvParser = new CsvParser(nameOfFile, path, repartisseur);
 			
 		}
 		
@@ -201,13 +202,11 @@ public class Repartisseur {
 	
 	
 	public void addHeader(String listHeaders, String nameTable) throws IOException {
-		// TODO Auto-generated method stub
-		
+		// Send the headers of the table to other nodes
 		Table table = new Table("secondary");
 		List<String> header = this.gson.fromJson(listHeaders, List.class);
 		table.init(header);
 		this.listTables.put(nameTable, table);
-		
 	}
 
 	public HashMap<String, Table> getListTables() {

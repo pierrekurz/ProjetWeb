@@ -78,7 +78,7 @@ public class Endpoint {
 			) throws Exception {
 		//csvReader = new CsvParser(pathToFile, nameOfFile);
 		
-		this.repartisseur.ParceCSV(pathToFile, nameOfFile, this.repartisseur);
+		this.repartisseur.ParceCSV(nameOfFile, pathToFile, this.repartisseur);
 		//repartisseur.getListTables().add(csvReader.getTable());
 
 		System.out.println("Fichier Parse");
@@ -141,13 +141,16 @@ public class Endpoint {
 		for(int l = 0; l<sizeOfIndex; l++) {
 			if(nameIndex.charAt(l) == '/') {
 				listNameColumns.add(word);
-				l++;
+				word = "";
+				
 			}
 			else {
 				word+=nameIndex.charAt(l);
 			}
 		}
-		
+		listNameColumns.add(word);
+	
+		System.out.println(listNameColumns);
 
 			System.out.println("Index ajoute");
 		this.repartisseur.addIndex(listNameColumns, nameFile);
@@ -168,6 +171,8 @@ public class Endpoint {
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String get(
+			
+			@QueryParam("nameTable") String nameTable, 
 			@QueryParam("nameIndex") String nameIndex,
 			@QueryParam("value")  String value
 			) throws Exception {
@@ -179,27 +184,34 @@ public class Endpoint {
 		for(int l = 0; l<sizeOfIndex; l++) {
 			if(nameIndex.charAt(l) == '/') {
 				listIndex.add(word);
-				l++;
+				word = "";
+
 			}
 			else {
 				word+=nameIndex.charAt(l);
 			}
 		}
+		listIndex.add(word);
 		
 		
 		int sizeOfValue = value.length();
 		String wordValue = "";
-		for(int l = 0; l<sizeOfIndex; l++) {
+		for(int l = 0; l<sizeOfValue; l++) {
 			if(value.charAt(l) == '/') {
 				listValue.add(wordValue);
-				l++;
+				wordValue = "";
+				
 			}
 			else {
+				
 				wordValue+=value.charAt(l);
 			}
 		}
-				
-		String results = repartisseur.get(listIndex, listValue);
+		
+		listValue.add(wordValue);
+		
+		System.out.println("Index ajoute");	
+		String results = this.repartisseur.get(nameTable, listIndex, listValue);
 		return results;
 	}
 	
